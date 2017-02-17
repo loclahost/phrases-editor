@@ -1,0 +1,35 @@
+<td colspan="100%">
+	<form class="form-horizontal">
+		<div class="form-group">
+			<label class="col-sm-1 control-label">Enum key</label>
+			<div class="col-sm-11">
+				<p class="form-control-static">{{ enumKey }}</p>
+			</div>
+		</div>
+		{{# phrases }}
+		<div class="form-group">
+			<label class="col-sm-1 control-label" for="{{ phrase-index }}_{{ locale }}">{{ locale }}</label>
+			<div class="col-sm-11">
+				<input type="text" class="form-control" data-meta="{{ meta-index }}" placeholder="A value" {{# value }}value="{{ value }}"{{/ value }}>
+			</div>
+		</div>
+		{{/ phrases }}
+		<div class="form-group">
+			<div class="col-sm-offset-1 col-sm-11">
+			<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group" role="group">
+				<button type="button" class="btn btn-primary ok-button">OK</button>
+				<button type="button" class="btn btn-default cancel-button">Cancel</button>
+				</div>
+				<div class="btn-group" role="group">
+				<button type="button" class="btn btn-primary copy-button">Copy</button>
+				<button type="button" class="btn btn-default paste-button">Paste</button>
+				</div>
+				<div class="btn-group" role="group">
+				<button type="button" class="btn {{# removed }}btn-default{{/ removed}}{{^ removed }}btn-danger{{/ removed}} remove-button">{{# removed }}Abort removal{{/ removed }}{{^ removed }}Remove{{/ removed }}</button>
+				</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</td>

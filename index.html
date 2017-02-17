@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link href="./bootstrap.css" rel="stylesheet">
+	<link href="./phraseseditor.css" rel="stylesheet">
+	<title>Phrases editor</title>
+</head>
+<body>
+	<div id="renderArea">
+
+	</div>
+	<nav class="navbar navbar-default navbar-fixed-bottom">
+
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#" onclick="return false;" style="color:#990ae3;">Phrases editor</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<li><a id="loadData" href="#">Open</a></li>
+			<li><a id="reloadData" href="#">Reload</a></li>
+			<li><a id="saveData" href="#">Save</a></li>
+			<li><a id="createNew" href="#">Create new</a></li>
+		</ul>
+		<form class="navbar-form navbar-right" role="search">
+			<div class="form-group">
+				<input type="text" class="form-control search" placeholder="Search">
+			</div>
+		</form>
+	</nav>
+</body>
+
+<script>
+	window.$ = window.jQuery = require('./jquery-2.2.4.min.js');
+	const ui = require('./ui/table-ui.js');
+	const dataStorage = require('./file_io/datastorage.js');
+
+	dataStorage.getPhrasesData().addChangeListener(() => {
+		ui.updateTitle();
+	});
+
+	$('#loadData').click(function(event) {
+		event.stopPropagation();
+		let dialog = require('electron').remote.dialog;
+		let fileNames = dialog.showOpenDialog({properties: ['openDirectory']});
+		if(fileNames.length) {
+			dataStorage.load(fileNames[0]);
+			$('button').prop("disabled", false);
+			ui.renderData();
+		};
+	});
+
+	$('#saveData').click(function(event) {
+		event.stopPropagation();
+		if(dataStorage.isDirty()) {
+			dataStorage.save();
+			ui.renderData();
+		}
+	});
+
+	$('#reloadData').click(function(event) {
+		event.stopPropagation();
+		dataStorage.load();
+		$('button').prop("disabled", false);
+		ui.renderData();
+	});
+
+	$('#createNew').click(function(event) {
+		event.stopPropagation();
+		ui.addRow();
+	});
+
+	$('input.search').keyup(function() {
+		var searchValue = $(this).val();
+		if(searchValue) {
+			var searchRegExp = new RegExp(searchValue,'gi');
+			$('#renderArea .content').each(function() {
+				var row = $(this);
+				row.toggle(searchRegExp.test(row.html()));
+			});
+		} else {
+			$('#renderArea .content').show();
+		}
+	});
+</script>
+</html>
