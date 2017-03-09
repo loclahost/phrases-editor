@@ -6,7 +6,7 @@ function createJavaContent(phrasesArray) {
 		let phraseKey = phrasesArray[i][0].split('~');
 		if(phraseKey[0] != currentNamespace) {
 			if(currentNamespace != '') {
-				content += currentKeys.join(',\n') + ';\n';
+				content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n';
 				content += createEnumEnd(currentNamespace);
 			}
 			currentNamespace = phraseKey[0];
@@ -25,7 +25,7 @@ function createJavaContent(phrasesArray) {
 }
 
 function createEnumStart(rawNamespace) {
-	return "public enum " + createValidEnumName(rawNamespace) + " implements se.netset.etailer.EnumTranslation {\n";
+	return "\tpublic enum " + createValidEnumName(rawNamespace) + " implements se.netset.etailer.EnumTranslation {\n";
 }
 
 function createEnumConstant(key) {
@@ -35,24 +35,24 @@ function createEnumConstant(key) {
 function createEnumEnd(rawNamespace) {
 	let namespace = createValidEnumName(rawNamespace);
 
-	let javaEnum = 'private String key;\n';
-	javaEnum += 'private final static String namespace = "' + namespace + '";\n\n';
+	let javaEnum = '\t\tprivate String key;\n';
+	javaEnum += '\t\tprivate final static String namespace = "' + namespace + '";\n\n';
 
-	javaEnum += 'private ' + namespace + '(String key) {\n';
-	javaEnum += 'this.key = key;\n';
-	javaEnum += '}\n\n';
+	javaEnum += '\t\tprivate ' + namespace + '(String key) {\n';
+	javaEnum += '\t\t\tthis.key = key;\n';
+	javaEnum += '\t\t}\n\n';
 
-	javaEnum += '@Override\n';
-	javaEnum += 'public String getTranslation(se.netset.i18n3.Locale loc) {\n';
-	javaEnum += 'return loc.translate(key, namespace);\n';
-	javaEnum += '}\n\n';
+	javaEnum += '\t\t@Override\n';
+	javaEnum += '\t\tpublic String getTranslation(se.netset.i18n3.Locale loc) {\n';
+	javaEnum += '\t\t\treturn loc.translate(key, namespace);\n';
+	javaEnum += '\t\t}\n\n';
 
-	javaEnum += '@Override\n';
-	javaEnum += 'public String toString() {\n';
-	javaEnum += 'return getTranslation(se.netset.i18n3.I18nComp.getLocaleService().getCurrentLocale());\n';
-	javaEnum += '}\n\n';
+	javaEnum += '\t\t@Override\n';
+	javaEnum += '\t\tpublic String toString() {\n';
+	javaEnum += '\t\t\treturn getTranslation(se.netset.i18n3.I18nComp.getLocaleService().getCurrentLocale());\n';
+	javaEnum += '\t\t}\n\n';
 
-	javaEnum += "}\n\n";
+	javaEnum += "\t}\n\n";
 
 	return javaEnum;
 }
