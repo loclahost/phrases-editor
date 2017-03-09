@@ -1,7 +1,7 @@
 const dataStorage = require('../file_io/datastorage.js');
 const templateLoader = require('./templates/template-loader.js');
 const Mustache = require('mustache');
-const javaEnumFactory = require('../file_io/java_enum_factory.js');
+const javaEnumFactory = require('../file_io/java-enum-factory.js');
 const clipboard = require('electron').remote.clipboard;
 
 function renderData() {
@@ -24,11 +24,11 @@ function createContexts() {
 
 	let headerContext = createHeaderContexts(phrases);
 
-	return Mustache.render(templateLoader.getTemplate('phrases-table'), { 
+	return Mustache.render(templateLoader.getTemplate('phrases-table'), {
 		header: {
 			heading: headerContext
-		}, 
-		content : phrasesContexts 
+		},
+		content : phrasesContexts
 	}, {
 		'phrase-row' : templateLoader.getTemplate('phrase-row'),
 		'view-content' : templateLoader.getTemplate('row-view-content')
@@ -82,12 +82,12 @@ function transformToForm(clickedTr) {
 	for(let i = 0; i < meta.length; i++) {
 		formContext.push({
 			locale: meta[i].name,
-			'meta-index': i, 
+			'meta-index': i,
 			value: phrasesArray[index].content[i + 1]
 		});
 	}
 
-	clickedTr.html(Mustache.render(templateLoader.getTemplate('row-edit-content'), { 
+	clickedTr.html(Mustache.render(templateLoader.getTemplate('row-edit-content'), {
 		phrases : formContext,
 		enumKey : javaEnumFactory.createJavaKey(phrasesArray[index].content[0]),
 		removed : phrasesArray[index].removed
@@ -126,7 +126,7 @@ function transformToForm(clickedTr) {
 		$('input', clickedTr).each(function(notUsed, element) {
 			let inputElement = $(element);
 			let metaIndex = inputElement.data('meta');
-			inputElement.val(clipboardArray[metaIndex + 1])		
+			inputElement.val(clipboardArray[metaIndex + 1])
 		});
 	});
 
@@ -177,7 +177,7 @@ function collectText(someFormTr) {
 	$('input', someFormTr).each(function(notUsed, element) {
 		let inputElement = $(element);
 		let metaIndex = inputElement.data('meta');
-		newPhrases[metaIndex + 1] = inputElement.val()		
+		newPhrases[metaIndex + 1] = inputElement.val()
 	});
 	return newPhrases;
 }

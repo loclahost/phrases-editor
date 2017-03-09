@@ -42,7 +42,7 @@
 		event.stopPropagation();
 		let dialog = require('electron').remote.dialog;
 		let fileNames = dialog.showOpenDialog({properties: ['openDirectory']});
-		if(fileNames.length) {
+		if(fileNames && fileNames.length) {
 			dataStorage.load(fileNames[0]);
 			$('button').prop("disabled", false);
 			ui.renderData();

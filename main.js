@@ -4,7 +4,7 @@ const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 let mainWindow;
 
-function createWindow () {
+app.on('ready', function() {
   mainWindow = new BrowserWindow({width: 1200, height: 600});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
@@ -30,9 +30,7 @@ function createWindow () {
     ];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-}
-
-app.on('ready', createWindow);
+ });
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {

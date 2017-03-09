@@ -10,8 +10,9 @@
   "repository": "git@github.com:loclahost/phrases-editor.git",
   "author": "Staffan Runnsjö",
   "license": "MIT",
-  "dependencies" : {
-    "mustache":">=2.3.0"
+  "dependencies": {
+    "extend": ">=3.0.0",
+    "mustache": ">=2.3.0"
   },
   "devDependencies": {
     "electron": ">=1.3.1"

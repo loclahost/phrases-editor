@@ -1,4 +1,5 @@
-const javaEnumFactory = require('./java_enum_factory.js');
+const javaEnumFactory = require('./java-enum-factory.js');
+const settings = require('../settings/settings-handler.js');
 
 function loadData(directory) {
 	let path = require('path');
@@ -62,7 +63,11 @@ function saveData(phrases, directory) {
 		fs.writeFile(meta[i].path, createPhrasesFileContents(fileContent, i + 1), function() {console.log('Done writing ' + meta[i].path)});
 	}
 
-	fs.writeFile(path.resolve(directory,'Translation.java'), javaEnumFactory.createJavaContent(fileContent), function() {console.log('Done writing java translations')});
+	settings.get().then(val => {
+		if(val['generate-java-enum']) {
+			fs.writeFile(path.resolve(directory,'Translation.java'), javaEnumFactory.createJavaContent(fileContent), function() {console.log('Done writing java translations')});
+		}
+	});
 
 	function createPhrasesFileContents(content, index) {
 		let fileContentArray = [];
