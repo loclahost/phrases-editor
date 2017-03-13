@@ -36,7 +36,7 @@ function createEnumEnd(rawNamespace) {
 	let namespace = createValidEnumName(rawNamespace);
 
 	let javaEnum = '\t\tprivate String key;\n';
-	javaEnum += '\t\tprivate final static String namespace = "' + namespace + '";\n\n';
+	javaEnum += '\t\tprivate static final String namespace = "' + namespace + '";\n\n';
 
 	javaEnum += '\t\tprivate ' + namespace + '(String key) {\n';
 	javaEnum += '\t\t\tthis.key = key;\n';

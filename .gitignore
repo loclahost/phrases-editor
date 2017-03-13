@@ -37,3 +37,5 @@ jspm_packages
 .node_repl_history
 /phrases-editor.sublime-project
 /phrases-editor.sublime-workspace
+/phrases-editor-darwin-x64
+/phrases-editor-linux-x64
