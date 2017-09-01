@@ -12,6 +12,10 @@ function loadData(directory) {
 		fileContent : []
 	};
 
+	if(!fs.existsSync(directory)) {
+		return phrasesData;
+	}
+
 	let files = fs.readdirSync(directory);
 
 	files = files.filter((element) => element.endsWith('.phrases'));
@@ -65,7 +69,7 @@ function saveData(phrases, directory) {
 
 	settingsHandler.get().then(settings => {
 		if(settings.generateJavaEnum) {
-			fs.writeFile(path.resolve(directory,'Translation.java'), javaEnumFactory.createJavaContent(fileContent), function() {console.log('Done writing java translations')});
+			javaEnumFactory.createJavaContent(fileContent, directory).then(content => fs.writeFile(path.resolve(directory,'Translation.java'), content, function() {console.log('Done writing java translations')}));
 		}
 	});
 
