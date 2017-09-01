@@ -33,6 +33,7 @@
 	window.$ = window.jQuery = require('./jquery-2.2.4.min.js');
 	const ui = require('./ui/table-ui.js');
 	const dataStorage = require('./file_io/datastorage.js');
+	const settingsHandler = require('./settings/settings-handler.js');
 
 	dataStorage.getPhrasesData().addChangeListener(() => {
 		ui.updateTitle();
@@ -43,9 +44,8 @@
 		let dialog = require('electron').remote.dialog;
 		let fileNames = dialog.showOpenDialog({properties: ['openDirectory']});
 		if(fileNames && fileNames.length) {
-			dataStorage.load(fileNames[0]);
-			$('button').prop("disabled", false);
-			ui.renderData();
+			loadDirectory(fileNames[0]);
+			settingsHandler.update({lastOpenDirectory : fileNames[0]}, 'user');
 		};
 	});
 
@@ -81,5 +81,19 @@
 			$('#renderArea .content').show();
 		}
 	});
+
+	settingsHandler.get().then(settings => {
+		if(settings.lastOpenDirectory) {
+			loadDirectory(settings.lastOpenDirectory);
+		}
+	});
+
+	function loadDirectory(directory) {
+		$('#renderArea').html('<div class="container"><p>Loading phrases from ' + directory + '</p></div>');
+		dataStorage.load(directory);
+		$('button').prop("disabled", false);
+		ui.renderData();
+	}
+
 </script>
 </html>
