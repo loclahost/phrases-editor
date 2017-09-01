@@ -15,6 +15,11 @@ app.on('ready', function() {
   var template = [{
         label: "Application",
         submenu: [
+             {
+            label: 'Toggle Developer Tools',
+            accelerator: 'Alt+Command+I',
+            click: function() { mainWindow.toggleDevTools(); }
+},
             { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
         ]}, {
         label: "Edit",
