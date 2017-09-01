@@ -65,9 +65,7 @@ function createRowContext(phrases, index) {
 }
 
 function transformToForm(clickedTr) {
-	console.log("transforming to form");
 	if(clickedTr.hasClass('is-form')) {
-		console.log("was already form, aborting");
 		return;
 	}
 
@@ -100,18 +98,21 @@ function transformToForm(clickedTr) {
 
 	$('.ok-button', clickedTr).click(function(event) {
 		event.stopPropagation();
-		let newPhrases = collectText(clickedTr);
-		phrases.setContentRow(index, newPhrases);
-		phrases.setDirty(true);
+		try {
+			let newPhrases = collectText(clickedTr);
+			phrases.setContentRow(index, newPhrases);
+			phrases.setDirty(true);
 
-		transformToView(clickedTr);
+			transformToView(clickedTr);
+		} catch(validationError) {
+			alert(validationError);
+		}
 	});
 
 	$('.copy-button', clickedTr).click(function(event) {
 		event.stopPropagation();
 		let newPhrases = collectText(clickedTr);
 		let stringRepresentation = JSON.stringify(newPhrases);
-		console.log(stringRepresentation);
 		clipboard.writeText(stringRepresentation);
 	});
 
@@ -119,7 +120,6 @@ function transformToForm(clickedTr) {
 		event.stopPropagation();
 		let clipboardArray = JSON.parse(clipboard.readText());
 		if(!Array.isArray(clipboardArray) || clipboardArray.length != meta.length + 1) {
-			console.log("Bad data in clipboard");
 			return;
 		}
 
@@ -179,6 +179,9 @@ function collectText(someFormTr) {
 		let metaIndex = inputElement.data('meta');
 		newPhrases[metaIndex + 1] = inputElement.val()
 	});
+	if(!/.+~.+/.test(newPhrases[0])) {
+		throw "Invalid key";
+	}
 	return newPhrases;
 }
 
