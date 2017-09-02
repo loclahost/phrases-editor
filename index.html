@@ -71,11 +71,11 @@
 
 	$('input.search').keyup(function() {
 		var searchValue = $(this).val();
-		if(searchValue) {
+		if(searchValue && searchValue.length > 1) {
 			var searchRegExp = new RegExp(searchValue,'gi');
 			$('#renderArea .content').each(function() {
 				var row = $(this);
-				row.toggle(searchRegExp.test(row.html()));
+				row.toggle(searchRegExp.test(row.text()));
 			});
 		} else {
 			$('#renderArea .content').show();
