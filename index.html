@@ -72,7 +72,7 @@
 	$('input.search').keyup(function() {
 		var searchValue = $(this).val();
 		if(searchValue && searchValue.length > 1) {
-			var searchRegExp = new RegExp(searchValue,'gi');
+			var searchRegExp = new RegExp(searchValue,'i');
 			$('#renderArea .content').each(function() {
 				var row = $(this);
 				row.toggle(searchRegExp.test(row.text()));
