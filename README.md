@@ -14,4 +14,4 @@ The editor supports settings to control different features, mostly regarding the
 }
 ```
 
-put them in a file called **phrases-editor-settings.json** in **~/.config/Electron/**. The enum will become unusable without these settings.
+put them in a file called **phrases-editor-settings.json** in your config directory. The enum will become unusable without these settings. The easiest way to get the file in the right place is to start the program and open a directory. A config file will then be created and you have to do is find it. It is usually located somewhere under ~/.config
