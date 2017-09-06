@@ -9,6 +9,20 @@ function renderData() {
 	$('.content').click(function() {
 		transformToForm($(this));
 	});
+	filterForSearch();
+}
+
+function filterForSearch() {
+	var searchValue = $('input.search').val();
+	if(searchValue && searchValue.length > 1) {
+		var searchRegExp = new RegExp(searchValue,'i');
+		$('#renderArea .content').each(function() {
+			var row = $(this);
+			row.toggle(searchRegExp.test(row.text()));
+		});
+	} else {
+		$('#renderArea .content').show();
+	}
 }
 
 function createContexts() {
@@ -193,3 +207,4 @@ function updateTitle() {
 module.exports.renderData = renderData;
 module.exports.updateTitle = updateTitle;
 module.exports.addRow = addRow;
+module.exports.filterForSearch = filterForSearch;

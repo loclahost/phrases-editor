@@ -69,17 +69,10 @@
 		ui.addRow();
 	});
 
+	let searchTimerId;
 	$('input.search').keyup(function() {
-		var searchValue = $(this).val();
-		if(searchValue && searchValue.length > 1) {
-			var searchRegExp = new RegExp(searchValue,'i');
-			$('#renderArea .content').each(function() {
-				var row = $(this);
-				row.toggle(searchRegExp.test(row.text()));
-			});
-		} else {
-			$('#renderArea .content').show();
-		}
+		clearTimeout(searchTimerId);
+		searchTimerId = window.setTimeout(ui.filterForSearch, 300);
 	});
 
 	settingsHandler.get().then(settings => {
