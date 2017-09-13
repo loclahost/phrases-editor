@@ -10,7 +10,8 @@ The editor supports settings to control different features, mostly regarding the
 "translationInterface":"fully qualified name of the translation interface",
 "localeInterface":"fully qualified name of your locale",
 "localeService":"fully qualified way to get your localeservice",
-"srcRoots":["list of folders which might be a source root of your project","usually something like src"]
+"srcRoots":["list of folders which might be a source root of your project","usually something like src"],
+"supriseMe":true
 }
 ```
 

@@ -35,6 +35,7 @@
 	const controlUI = require('./ui/control-ui.js');
 	const dataStorage = require('./file_io/datastorage.js');
 	const settingsHandler = require('./settings/settings-handler.js');
+	const suprises = require('./ui/suprises.js');
 
 	dataStorage.getPhrasesData().addChangeListener(() => {
 		ui.updateTitle();
@@ -43,6 +44,9 @@
 	settingsHandler.get().then(settings => {
 		if(settings.lastOpenDirectory) {
 			controlUI.loadDirectory(settings.lastOpenDirectory);
+		}
+		if(settings.supriseMe) {
+			suprises.initiateSuprises();
 		}
 	});
 
