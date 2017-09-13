@@ -59,6 +59,7 @@ function saveData(phrases, directory) {
 	let content = phrases.getContent();
 	content = content
 			.filter((element) => !element.removed)
+			.filter((element) => !!element.content[0])
 			.sort((a, b) => a.content[0].localeCompare(b.content[0], 'sv'));
 
 	let fileContent = content.map((element) => element.content);
