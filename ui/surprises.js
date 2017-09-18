@@ -19,10 +19,10 @@ function changeTextColor() {
 	}, 2000);
 }
 
-function initiateSuprises() {
+function initiateSurprises() {
 	window.setInterval(function() {
 		changeTextColor();
 	}, 300000);
 }
 
-module.exports.initiateSuprises = initiateSuprises;
+module.exports.initiateSurprises = initiateSurprises;
