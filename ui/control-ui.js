@@ -1,5 +1,6 @@
 const dataStorage = require('../file_io/datastorage.js');
 const ui = require('./table-ui.js');
+const settingsHandler = require('../settings/settings-handler.js');
 
 
 function delayButtonRepeatClick(button, clickFunction, event) {
@@ -54,16 +55,22 @@ function initateControls() {
 	};
 	$('#createNew').click(createNew);
 
-	let searchTimerId;
-	$('input.search')
-	.keydown(function(event) {
-		if(event.keyCode == 13) {
-			return false;
+	settingsHandler.get().then(settings => {
+		let searchTimerId;
+		$('input.search').keydown(function(event) {
+			if(event.keyCode == 13) {
+				if(settings.filterOnEnter) {
+					ui.filterForSearch();
+				}
+				return false;
+			}
+		});
+		if(!settings.filterOnEnter) {
+			$('input.search').keyup(function() {
+				clearTimeout(searchTimerId);
+				searchTimerId = window.setTimeout(ui.filterForSearch, 300);
+			});
 		}
-	})
-	.keyup(function() {
-		clearTimeout(searchTimerId);
-		searchTimerId = window.setTimeout(ui.filterForSearch, 300);
 	});
 }
 
