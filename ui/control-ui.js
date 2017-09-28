@@ -55,7 +55,13 @@ function initateControls() {
 	$('#createNew').click(createNew);
 
 	let searchTimerId;
-	$('input.search').keyup(function() {
+	$('input.search')
+	.keydown(function(event) {
+		if(event.keyCode == 13) {
+			return false;
+		}
+	})
+	.keyup(function() {
 		clearTimeout(searchTimerId);
 		searchTimerId = window.setTimeout(ui.filterForSearch, 300);
 	});
