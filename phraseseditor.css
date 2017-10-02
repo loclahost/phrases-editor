@@ -127,4 +127,18 @@
     border-bottom-color:#730800;
 }
 
+.notification-type-info {
+    color:#000094;
+}
+
+.notification-type-warning {
+    color:#b1b100;
+    font-weight: bold;
+}
+
+.notification-type-error {
+    color:red;
+    font-weight: bold;
+}
+
 body { padding-bottom: 70px; }
