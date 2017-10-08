@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="UTF-8">
 	<link href="./bootstrap.css" rel="stylesheet">
 	<link href="./phraseseditor.css" rel="stylesheet">
 	<title>Phrases editor</title>
 </head>
+
 <body>
 	<div id="notification-area">
-
 	</div>
 	<div id="renderArea">
-
 	</div>
 	<nav class="navbar navbar-default navbar-fixed-bottom">
-
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#" onclick="return false;" style="color:#990ae3;">Phrases editor</a>
+			<img src="icon/icon.png" class="navbar-brand-icon">
 		</div>
 		<ul class="nav navbar-nav">
-			<li><a id="loadData" href="#">Open</a></li>
-			<li><a id="reloadData" href="#">Reload</a></li>
-			<li><a id="saveData" href="#">Save</a></li>
-			<li><a id="createNew" href="#">Create new</a></li>
+			<li id="loadData"><a href="#">Open</a></li>
+			<li id="reloadData"><a href="#">Reload</a></li>
+			<li id="saveData"><a href="#">Save</a></li>
+			<li id="createNew"><a href="#">Create new</a></li>
 		</ul>
 		<form class="navbar-form navbar-right" role="search">
 			<div class="form-group">
@@ -31,29 +30,28 @@
 		</form>
 	</nav>
 </body>
-
 <script>
-	window.$ = window.jQuery = require('./jquery-2.2.4.min.js');
-	const ui = require('./ui/table-ui.js');
-	const controlUI = require('./ui/control-ui.js');
-	const dataStorage = require('./file_io/datastorage.js');
-	const settingsHandler = require('./settings/settings-handler.js');
-	const surprises = require('./ui/surprises.js');
+window.$ = window.jQuery = require('./jquery-2.2.4.min.js');
+const ui = require('./ui/table-ui.js');
+const controlUI = require('./ui/control-ui.js');
+const dataStorage = require('./file_io/datastorage.js');
+const settingsHandler = require('./settings/settings-handler.js');
+const surprises = require('./ui/surprises.js');
 
-	dataStorage.getPhrasesData().addChangeListener(() => {
-		ui.updateTitle();
-	});
+dataStorage.getPhrasesData().addChangeListener(() => {
+	ui.updateTitle();
+});
 
-	settingsHandler.get().then(settings => {
-		if(settings.lastOpenDirectory) {
-			controlUI.loadDirectory(settings.lastOpenDirectory);
-		}
-		if(settings.surpriseMe) {
-			surprises.initiateSurprises();
-		}
-	});
+settingsHandler.get().then(settings => {
+	if (settings.lastOpenDirectory) {
+		controlUI.loadDirectory(settings.lastOpenDirectory);
+	}
+	if (settings.surpriseMe) {
+		surprises.initiateSurprises();
+	}
+});
 
-	controlUI.initateControls();
-
+controlUI.initateControls();
 </script>
+
 </html>

@@ -1,144 +1,170 @@
 .content {
     cursor: pointer;
 }
+
 .content:nth-of-type(odd) {
     background-color: #f9f9f9;
 }
+
 .phrases-icon {
-    position:relative;
-    z-index:1;
-    overflow:hidden;
-    list-style:none;
-    padding:0;
-    margin:0 0 0.25em;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.25em;
 }
 
 .phrases-icon a:link,
 .phrases-icon a:visited {
-    display:block;
-    border:0;
-    padding-left:28px;
-    color:#c55500;
+    display: block;
+    border: 0;
+    padding-left: 28px;
+    color: #c55500;
 }
 
 .phrases-icon a:hover,
 .phrases-icon a:focus,
 .phrases-icon a:active {
-    color:#730800;
-    background:transparent;
+    color: #730800;
+    background: transparent;
 }
 
 .phrases-icon:before,
 .phrases-icon:after,
 .phrases-icon a:before,
 .phrases-icon a:after {
-    content:"";
-    position:absolute;
-    top:50%;
-    left:0;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
 }
 
 .phrases-icon a:before,
 .phrases-icon a:after {
-    margin:-8px 0 0;
-    background:#c55500;
+    margin: -8px 0 0;
+    background: #c55500;
 }
 
 .phrases-icon a:hover:before,
 .phrases-icon a:focus:before,
 .phrases-icon a:active:before {
-    background:#730800;
+    background: #730800;
 }
 
 .delete a:before {
-    width:16px;
-    height:16px;
+    width: 16px;
+    height: 16px;
     /* css3 */
-    -webkit-border-radius:16px;
-    -moz-border-radius:16px;
-    border-radius:16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
 }
 
 .delete a:after {
-    left:3px;
-    width:10px;
-    height:2px;
-    margin-top:-1px;
-    background:#fff;
+    left: 3px;
+    width: 10px;
+    height: 2px;
+    margin-top: -1px;
+    background: #fff;
     /* css3 */
-    -webkit-transform:rotate(45deg);
-    -moz-transform:rotate(45deg);
-    -ms-transform:rotate(45deg);
-    -o-transform:rotate(45deg);
-    transform:rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .delete:before {
-    z-index:10;
-    left:7px;
-    width:2px;
-    height:10px;
-    margin-top:-5px;
-    background:#fff;
+    z-index: 10;
+    left: 7px;
+    width: 2px;
+    height: 10px;
+    margin-top: -5px;
+    background: #fff;
     /* css3 */
-    -webkit-transform:rotate(45deg);
-    -moz-transform:rotate(45deg);
-    -ms-transform:rotate(45deg);
-    -o-transform:rotate(45deg);
-    transform:rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .remove a:before {
-    width:16px;
-    height:16px;
+    width: 16px;
+    height: 16px;
     /* css3 */
-    -webkit-border-radius:16px;
-    -moz-border-radius:16px;
-    border-radius:16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
 }
 
 .remove a:after {
-    left:3px;
-    width:10px;
-    height:2px;
-    margin-top:-1px;
-    background:#fff;
+    left: 3px;
+    width: 10px;
+    height: 2px;
+    margin-top: -1px;
+    background: #fff;
 }
 
 .eject a:before {
-    left:1px;
-    width:14px;
-    height:2px;
-    margin-top:4px;
+    left: 1px;
+    width: 14px;
+    height: 2px;
+    margin-top: 4px;
 }
 
 .eject a:after {
-    left:1px;
-    border:8px solid transparent;
-    border-width:8px 7px;
-    border-bottom-color:#c55500;
-    margin-top:-13px;
-    background:transparent;
+    left: 1px;
+    border: 8px solid transparent;
+    border-width: 8px 7px;
+    border-bottom-color: #c55500;
+    margin-top: -13px;
+    background: transparent;
 }
 
 .eject a:hover:after,
 .eject a:focus:after,
 .eject a:active:after {
-    border-bottom-color:#730800;
+    border-bottom-color: #730800;
 }
 
 .notification-type-info {
-    color:#000094;
+    color: #000094;
 }
 
 .notification-type-warning {
-    color:#b1b100;
+    color: #b1b100;
     font-weight: bold;
 }
 
 .notification-type-error {
-    color:red;
+    color: red;
     font-weight: bold;
 }
 
-body { padding-bottom: 70px; }
+.navbar-brand-icon {
+    height: 40px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.navbar-fixed-bottom {
+    background-color: lightgrey;
+}
+
+.navbar .nav li>a {
+    color: black;
+}
+
+.navbar .nav li:hover {
+    background-color: white;
+}
+
+.search {
+    margin-right: 10px;
+}
+
+body {
+    padding-bottom: 70px;
+}
