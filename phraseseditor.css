@@ -165,6 +165,10 @@
     margin-right: 10px;
 }
 
+.img {
+    transition: width 2s, height 2s, background-color 2s, transform 2s;
+}
+
 body {
     padding-bottom: 70px;
 }

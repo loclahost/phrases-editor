@@ -19,9 +19,23 @@ function changeTextColor() {
 	}, 2000);
 }
 
+function rotateImages() {
+	window.setTimeout(function() {
+		$('img').css('transform', 'rotate(270deg)');
+		window.setTimeout(function() {
+			$('img').css('transform', '');
+		}, 2000);
+	}, 2000);
+}
+
 function initiateSurprises() {
 	window.setInterval(function() {
-		changeTextColor();
+		let randomNumber = Math.random();
+		if (randomNumber < 0.25) {
+			changeTextColor();
+		} else if (randomNumber < 0.5) {
+			rotateImages();
+		}
 	}, 300000);
 }
 
