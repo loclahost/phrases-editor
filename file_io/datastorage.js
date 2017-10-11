@@ -4,6 +4,7 @@ let directoryPath;
 let phrasesData = (function() {
 	let meta = [];
 	let fileContent = {};
+	let state = 'idle';
 	let dirty = false;
 	let changeListeners = [];
 
@@ -11,7 +12,7 @@ let phrasesData = (function() {
 		changeListeners.push(listener);
 	};
 
-	let getMeta =  function() {
+	let getMeta = function() {
 		return meta;
 	};
 
@@ -26,8 +27,8 @@ let phrasesData = (function() {
 
 	let addContentRow = function() {
 		return fileContent.push({
-			content : new Array(meta.length + 1),
-			removed : false
+			content: new Array(meta.length + 1),
+			removed: false
 		}) - 1;
 	}
 
@@ -39,27 +40,32 @@ let phrasesData = (function() {
 		fileContent[index].removed = !fileContent[index].removed;
 	}
 
-	let setDirty = function(dirtyOrNot) {
-		dirty = dirtyOrNot;
-		for(let i = 0; i < changeListeners.length; i++) {
+	let setState = function(newState) {
+		state = newState;
+		for (let i = 0; i < changeListeners.length; i++) {
 			changeListeners[i]();
 		}
 	};
 
 	let isDirty = function() {
-		return dirty;
+		return state == 'dirty';
 	};
 
+	let getState = function() {
+		return state;
+	}
+
 	return {
-		addChangeListener : addChangeListener,
-		getMeta : getMeta,
-		setContent : setContent,
-		getContent : getContent,
-		addContentRow : addContentRow,
-		setContentRow : setContentRow,
-		toggleRemoveContentRow : toggleRemoveContentRow,
-		setDirty : setDirty,
-		isDirty : isDirty
+		addChangeListener: addChangeListener,
+		getMeta: getMeta,
+		setContent: setContent,
+		getContent: getContent,
+		addContentRow: addContentRow,
+		setContentRow: setContentRow,
+		toggleRemoveContentRow: toggleRemoveContentRow,
+		setState: setState,
+		isDirty: isDirty,
+		getState: getState
 	};
 }());
 
@@ -73,18 +79,20 @@ function getPhrasesData() {
 }
 
 function save() {
+	phrasesData.setState('save');
 	let savedPhrases = fileHandler.saveData(phrasesData, directoryPath);
 	phrasesData.setContent(savedPhrases, phrasesData.getMeta());
-	phrasesData.setDirty(false);
+	phrasesData.setState('idle');
 }
 
 function load(directory) {
-	if(directory) {
+	if (directory) {
 		directoryPath = directory;
 	}
+	phrasesData.setState('load');
 	let newContent = fileHandler.loadData(directoryPath);
 	phrasesData.setContent(newContent.fileContent, newContent.meta);
-	phrasesData.setDirty(false);
+	phrasesData.setState('idle');
 }
 
 module.exports.getDirectoryPath = getDirectoryPath;
@@ -92,3 +100,4 @@ module.exports.getPhrasesData = getPhrasesData;
 module.exports.save = save;
 module.exports.load = load;
 module.exports.isDirty = phrasesData.isDirty;
+module.exports.getState = phrasesData.getState;

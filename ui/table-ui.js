@@ -14,8 +14,8 @@ function renderData() {
 
 function filterForSearch() {
 	var searchValue = $('input.search').val();
-	if(searchValue && searchValue.length > 1) {
-		var searchRegExp = new RegExp(searchValue,'i');
+	if (searchValue && searchValue.length > 1) {
+		var searchRegExp = new RegExp(searchValue, 'i');
 		$('#renderArea .content').each(function() {
 			var row = $(this);
 			row.toggle(searchRegExp.test(row.text()));
@@ -30,8 +30,8 @@ function createContexts() {
 	let phrasesArray = phrases.getContent();
 
 	let phrasesContexts = [];
-	for(var i = 0; i < phrasesArray.length; i++) {
-		if(!phrasesArray[i].removed) {
+	for (var i = 0; i < phrasesArray.length; i++) {
+		if (!phrasesArray[i].removed) {
 			phrasesContexts.push(createRowContext(phrasesArray, i));
 		}
 	}
@@ -42,17 +42,17 @@ function createContexts() {
 		header: {
 			heading: headerContext
 		},
-		content : phrasesContexts
+		content: phrasesContexts
 	}, {
-		'phrase-row' : templateLoader.getTemplate('phrase-row'),
-		'view-content' : templateLoader.getTemplate('row-view-content')
+		'phrase-row': templateLoader.getTemplate('phrase-row'),
+		'view-content': templateLoader.getTemplate('row-view-content')
 	});
 }
 
 function createHeaderContexts(phrases) {
 	let meta = phrases.getMeta();
 	let headerContext = ['Key'];
-	for(let i = 0; i < meta.length; i++) {
+	for (let i = 0; i < meta.length; i++) {
 		headerContext.push(meta[i].name);
 	}
 	return headerContext;
@@ -62,7 +62,7 @@ function createRowContext(phrases, index) {
 	let data = phrases[index].content;
 	let columnPercent = 100 / data.length;
 	let columns = [];
-	for(let i = 0; i < data.length; i++) {
+	for (let i = 0; i < data.length; i++) {
 		columns[i] = {
 			data: data[i],
 			columnPercent: columnPercent,
@@ -79,7 +79,7 @@ function createRowContext(phrases, index) {
 }
 
 function transformToForm(clickedTr) {
-	if(clickedTr.hasClass('is-form')) {
+	if (clickedTr.hasClass('is-form')) {
 		return;
 	}
 
@@ -90,8 +90,8 @@ function transformToForm(clickedTr) {
 	let meta = phrases.getMeta();
 	let phrasesArray = phrases.getContent();
 
-	let formContext = [{locale: 'Key', 'meta-index':-1, value: phrasesArray[index].content[0]}];
-	for(let i = 0; i < meta.length; i++) {
+	let formContext = [{ locale: 'Key', 'meta-index': -1, value: phrasesArray[index].content[0] }];
+	for (let i = 0; i < meta.length; i++) {
 		formContext.push({
 			locale: meta[i].name,
 			'meta-index': i,
@@ -100,12 +100,12 @@ function transformToForm(clickedTr) {
 	}
 
 	clickedTr.html(Mustache.render(templateLoader.getTemplate('row-edit-content'), {
-		phrases : formContext,
-		enumKey : javaEnumFactory.createJavaKey(phrasesArray[index].content[0]),
-		removed : phrasesArray[index].removed
+		phrases: formContext,
+		enumKey: javaEnumFactory.createJavaKey(phrasesArray[index].content[0]),
+		removed: phrasesArray[index].removed
 	}));
 
-	$('.cancel-button', clickedTr).click(function (event) {
+	$('.cancel-button', clickedTr).click(function(event) {
 		event.stopPropagation();
 		transformToView(clickedTr);
 	});
@@ -115,10 +115,10 @@ function transformToForm(clickedTr) {
 		try {
 			let newPhrases = collectText(clickedTr);
 			phrases.setContentRow(index, newPhrases);
-			phrases.setDirty(true);
+			phrases.setState('dirty');
 
 			transformToView(clickedTr);
-		} catch(validationError) {
+		} catch (validationError) {
 			alert(validationError);
 		}
 	});
@@ -133,7 +133,7 @@ function transformToForm(clickedTr) {
 	$('.paste-button', clickedTr).click(function(event) {
 		event.stopPropagation();
 		let clipboardArray = JSON.parse(clipboard.readText());
-		if(!Array.isArray(clipboardArray) || clipboardArray.length != meta.length + 1) {
+		if (!Array.isArray(clipboardArray) || clipboardArray.length != meta.length + 1) {
 			return;
 		}
 
@@ -147,14 +147,13 @@ function transformToForm(clickedTr) {
 	$('.remove-button', clickedTr).click(function(event) {
 		event.stopPropagation();
 		phrases.toggleRemoveContentRow(index);
-		phrases.setDirty(true);
+		phrases.setState('dirty');
 
 		transformToView(clickedTr);
 	});
 }
 
 function transformToView(clickedTr) {
-	console.log("transforming to view");
 	let index = clickedTr.data("index");
 	let phrases = dataStorage.getPhrasesData();
 	let phrasesArray = phrases.getContent();
@@ -162,8 +161,8 @@ function transformToView(clickedTr) {
 	clickedTr.html(Mustache.render(templateLoader.getTemplate('row-view-content'), createRowContext(phrasesArray, index)));
 	clickedTr.removeClass('is-form');
 
-	if(clickedTr.offset().top < $(window).scrollTop()) {
-		$('html,body').animate({scrollTop: clickedTr.offset().top});
+	if (clickedTr.offset().top < $(window).scrollTop()) {
+		$('html,body').animate({ scrollTop: clickedTr.offset().top });
 	}
 }
 
@@ -172,7 +171,7 @@ function addRow() {
 	let newIndex = phrases.addContentRow();
 	let context = createRowContext(phrases.getContent(), newIndex);
 	let newTr = $(Mustache.render(templateLoader.getTemplate('phrase-row'), context, {
-		'view-content' : templateLoader.getTemplate('row-view-content')
+		'view-content': templateLoader.getTemplate('row-view-content')
 	}));
 	newTr.appendTo($('#renderArea table'));
 	newTr.click(function() {
@@ -181,8 +180,8 @@ function addRow() {
 
 	newTr.click();
 
-	if(newTr.offset().top > $(window).scrollTop()) {
-		$('html,body').animate({scrollTop: newTr.offset().top});
+	if (newTr.offset().top > $(window).scrollTop()) {
+		$('html,body').animate({ scrollTop: newTr.offset().top });
 	}
 }
 
@@ -193,7 +192,7 @@ function collectText(someFormTr) {
 		let metaIndex = inputElement.data('meta');
 		newPhrases[metaIndex + 1] = inputElement.val()
 	});
-	if(!/.+~.+/.test(newPhrases[0])) {
+	if (!/.+~.+/.test(newPhrases[0])) {
 		throw "Invalid key";
 	}
 	return newPhrases;
@@ -201,7 +200,21 @@ function collectText(someFormTr) {
 
 function updateTitle() {
 	let openedFile = dataStorage.getDirectoryPath() || "No file opened";
-	document.title = "Phrases Editor - " + openedFile + (dataStorage.isDirty() ? " *" : "");
+	let title = "Phrases Editor - " + openedFile;
+	switch (dataStorage.getState()) {
+		case 'idle':
+			break;
+		case 'dirty':
+			title += " - Unsaved data";
+			break;
+		case 'save':
+			title += " - Saving data";
+			break;
+		case 'load':
+			title += " - Loading data";
+			break;
+	}
+	document.title = title;
 }
 
 module.exports.renderData = renderData;
