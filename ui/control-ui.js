@@ -1,7 +1,14 @@
 const dataStorage = require('../file_io/datastorage.js');
 const ui = require('./table-ui.js');
 const settingsHandler = require('../settings/settings-handler.js');
+const ipcRenderer = require('electron').ipcRenderer;
 
+function saveAndRerenderIfDirty() {
+	if (dataStorage.isDirty()) {
+		dataStorage.save();
+		ui.renderData();
+	}
+}
 
 function delayButtonRepeatClick(button, clickFunction, event) {
 	let disabledState = button.prop('disabled');
@@ -25,20 +32,17 @@ function initateControls() {
 	let loadData = function(event) {
 		delayButtonRepeatClick($(this), loadData, event);
 		let dialog = require('electron').remote.dialog;
-		let fileNames = dialog.showOpenDialog({properties: ['openDirectory']});
-		if(fileNames && fileNames.length) {
+		let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
+		if (fileNames && fileNames.length) {
 			loadDirectory(fileNames[0]);
-			settingsHandler.update({lastOpenDirectory : fileNames[0]}, 'user');
+			settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
 		};
 	};
 	$('#loadData').click(loadData);
 
 	let saveData = function(event) {
 		delayButtonRepeatClick($(this), saveData, event);
-		if(dataStorage.isDirty()) {
-			dataStorage.save();
-			ui.renderData();
-		}
+		saveAndRerenderIfDirty();
 	};
 	$('#saveData').click(saveData);
 
@@ -58,14 +62,14 @@ function initateControls() {
 	settingsHandler.get().then(settings => {
 		let searchTimerId;
 		$('input.search').keydown(function(event) {
-			if(event.keyCode == 13) {
-				if(settings.filterOnEnter) {
+			if (event.keyCode == 13) {
+				if (settings.filterOnEnter) {
 					ui.filterForSearch();
 				}
 				return false;
 			}
 		});
-		if(!settings.filterOnEnter) {
+		if (!settings.filterOnEnter) {
 			$('input.search').keyup(function() {
 				clearTimeout(searchTimerId);
 				searchTimerId = window.setTimeout(ui.filterForSearch, 300);
@@ -73,6 +77,10 @@ function initateControls() {
 		}
 	});
 }
+
+ipcRenderer.on('file-save', function(event, message) {
+	saveAndRerenderIfDirty();
+});
 
 module.exports.loadDirectory = loadDirectory;
 module.exports.initateControls = initateControls;
