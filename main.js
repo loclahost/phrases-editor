@@ -20,19 +20,51 @@ function createNewWindow() {
 				click: function() { mainWindow.toggleDevTools(); }
 			},
 			{
+				label: "Open",
+				accelerator: "CmdOrCtrl+O",
+				selector: "open:",
+				click: function() {
+					mainWindow.webContents.send('window-command', 'open');
+				}
+			},
+			{
+				label: "Reload",
+				accelerator: "CmdOrCtrl+R",
+				selector: "reload:",
+				click: function() {
+					mainWindow.webContents.send('window-command', 'reload');
+				}
+			},
+			{
 				label: "Save",
 				accelerator: "CmdOrCtrl+S",
 				selector: "save:",
 				click: function() {
-					mainWindow.webContents.send('file-save', 'save-editor');
+					mainWindow.webContents.send('window-command', 'save');
+				}
+			},
+			{
+				label: "New phrase",
+				accelerator: "CmdOrCtrl+N",
+				selector: "new:",
+				click: function() {
+					mainWindow.webContents.send('window-command', 'new');
 				}
 			},
 			{ label: "Hide", accelerator: "Command+H", click: function() { app.hide(); } },
-			{ label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); } }
+			{ label: "Quit", accelerator: "CmdOrCtrl+Q", click: function() { app.quit(); } }
 		]
 	}, {
 		label: "Edit",
-		submenu: [
+		submenu: [{
+				label: "Find",
+				accelerator: "CmdOrCtrl+F",
+				selector: "find:",
+				click: function() {
+					mainWindow.webContents.send('window-command', 'find');
+				}
+			},
+			{ type: "separator" },
 			{ label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
 			{ label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
 			{ type: "separator" },

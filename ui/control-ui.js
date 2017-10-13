@@ -10,6 +10,29 @@ function saveAndRerenderIfDirty() {
 	}
 }
 
+function choseDirectoryAndLoadData() {
+	let dialog = require('electron').remote.dialog;
+	let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
+	if (fileNames && fileNames.length) {
+		loadAndRender(fileNames[0]);
+		$('button').prop("disabled", false);
+		settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
+	};
+}
+
+function loadAndRender(directory) {
+	dataStorage.load(directory);
+	ui.renderData();
+}
+
+function createNewRow() {
+	ui.addRow();
+}
+
+function focusOnFilter() {
+	$('.navbar .search').focus();
+}
+
 function delayButtonRepeatClick(button, clickFunction, event) {
 	let disabledState = button.prop('disabled');
 	button.prop('disabled', 'disabled');
@@ -21,22 +44,10 @@ function delayButtonRepeatClick(button, clickFunction, event) {
 	event.stopPropagation();
 }
 
-function loadDirectory(directory) {
-	$('#renderArea').html('<div class="container"><p>Loading phrases from ' + directory + '</p></div>');
-	dataStorage.load(directory);
-	$('button').prop("disabled", false);
-	ui.renderData();
-}
-
 function initateControls() {
 	let loadData = function(event) {
 		delayButtonRepeatClick($(this), loadData, event);
-		let dialog = require('electron').remote.dialog;
-		let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
-		if (fileNames && fileNames.length) {
-			loadDirectory(fileNames[0]);
-			settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
-		};
+		choseDirectoryAndLoadData();
 	};
 	$('#loadData').click(loadData);
 
@@ -48,14 +59,13 @@ function initateControls() {
 
 	let reloadData = function(event) {
 		delayButtonRepeatClick($(this), reloadData, event);
-		dataStorage.load();
-		ui.renderData();
+		loadAndRender();
 	}
 	$('#reloadData').click(reloadData);
 
 	let createNew = function(event) {
 		delayButtonRepeatClick($(this), createNew, event);
-		ui.addRow();
+		createNewRow();
 	};
 	$('#createNew').click(createNew);
 
@@ -78,9 +88,25 @@ function initateControls() {
 	});
 }
 
-ipcRenderer.on('file-save', function(event, message) {
-	saveAndRerenderIfDirty();
+ipcRenderer.on('window-command', function(event, message) {
+	switch (message) {
+		case 'open':
+			choseDirectoryAndLoadData();
+			break;
+		case 'reload':
+			loadAndRender();
+			break;
+		case 'save':
+			saveAndRerenderIfDirty();
+			break;
+		case 'new':
+			createNewRow();
+			break;
+		case 'find':
+			focusOnFilter();
+			break;
+	}
 });
 
-module.exports.loadDirectory = loadDirectory;
+module.exports.loadDirectory = loadAndRender;
 module.exports.initateControls = initateControls;
