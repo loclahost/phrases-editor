@@ -27,7 +27,7 @@ function createNewWindow() {
 					mainWindow.webContents.send('file-save', 'save-editor');
 				}
 			},
-			{ label: "Hide", accelerator: "Command+H", click: function() { mainWindow.hide(); } },
+			{ label: "Hide", accelerator: "Command+H", click: function() { app.hide(); } },
 			{ label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); } }
 		]
 	}, {
@@ -59,5 +59,7 @@ app.on('window-all-closed', function() {
 app.on('activate', function() {
 	if (mainWindow === null) {
 		createNewWindow();
+	} else {
+		app.show();
 	}
 });
