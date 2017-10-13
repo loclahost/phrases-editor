@@ -40,8 +40,12 @@ function getSettings() {
 
 function updateSettings(newSettings, path) {
 	load(path)
-	.then(oldSettings => extend(oldSettings, newSettings))
-	.then(mergedSettings => fs.writeFile(path, JSON.stringify(mergedSettings)));
+		.then(oldSettings => extend(oldSettings, newSettings))
+		.then(mergedSettings => fs.writeFile(path, JSON.stringify(mergedSettings), (err) => {
+			if (err) {
+				console.error(err);
+			}
+		}));
 
 	global[SETTINGS_KEY] = new Promise((resolve, reject) => resolve(extend(global[SETTINGS_KEY], newSettings)));
 }
@@ -54,21 +58,21 @@ var globalSymbols = Object.getOwnPropertySymbols(global);
 var hasSettings = (globalSymbols.indexOf(SETTINGS_KEY) > -1);
 
 
-if (!hasSettings){
-  global[SETTINGS_KEY] = getSettings();
+if (!hasSettings) {
+	global[SETTINGS_KEY] = getSettings();
 }
 
 var singleton = {
 	get: function() {
-    	return global[SETTINGS_KEY];
-  	},
-  	update: function(settings, type) {
-  		if(type == 'user') {
-  			updateSettings(settings, USER_SETTINGS_PATH);
-  		} else {
-  			updateSettings(settings, SYSTEM_SETTINGS_PATH);
-  		}
-  	}
+		return global[SETTINGS_KEY];
+	},
+	update: function(settings, type) {
+		if (type == 'user') {
+			updateSettings(settings, USER_SETTINGS_PATH);
+		} else {
+			updateSettings(settings, SYSTEM_SETTINGS_PATH);
+		}
+	}
 };
 
 module.exports = singleton;
