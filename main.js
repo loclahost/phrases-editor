@@ -16,31 +16,32 @@ function createNewWindow() {
 	{
 		label: "Application",
 		submenu: [
-		{
-			label: 'Toggle Developer Tools',
-			accelerator: 'Alt+Command+I',
-			click: function() { mainWindow.toggleDevTools(); }
-		},
-		{
-			label: "Save",
-			accelerator: "CmdOrCtrl+S",
-			selector: "save:",
-			click: function() {
-				mainWindow.webContents.send('file-save', 'save-editor');
-			}
-		},
-		{ label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+			{
+				label: 'Toggle Developer Tools',
+				accelerator: 'Alt+Command+I',
+				click: function() { mainWindow.toggleDevTools(); }
+			},
+			{
+				label: "Save",
+				accelerator: "CmdOrCtrl+S",
+				selector: "save:",
+				click: function() {
+					mainWindow.webContents.send('file-save', 'save-editor');
+				}
+			},
+			{ label: "Hide", accelerator: "Command+H", click: function() { mainWindow.hide(); }},
+			{ label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
 		]
 	}, {
 		label: "Edit",
 		submenu: [
-		{ label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-		{ label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-		{ type: "separator" },
-		{ label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-		{ label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-		{ label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-		{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+			{ label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+			{ label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+			{ type: "separator" },
+			{ label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+			{ label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+			{ label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+			{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
 		]
 	}
 	];
@@ -61,5 +62,7 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
 	if (mainWindow === null) {
 		createNewWindow();
+	} else {
+		mainWindow.show();
 	}
 });
