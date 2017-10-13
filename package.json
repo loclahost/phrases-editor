@@ -5,7 +5,8 @@
 	"description": "Phrases editor for Netset phrases files",
 	"main": "main.js",
 	"scripts": {
-		"start": "electron main.js"
+		"start": "electron main.js",
+		"package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=icon/icon.icns --prune=true --out=release-builds --version-string.ProductName=\"Phrases\""
 	},
 	"repository": "git@github.com:loclahost/phrases-editor.git",
 	"author": "Staffan Runnsjö",
