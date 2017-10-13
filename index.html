@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-	<meta charset="UTF-8">
-	<link href="./bootstrap.css" rel="stylesheet">
-	<link href="./phraseseditor.css" rel="stylesheet">
-	<title>Phrases editor</title>
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<link href="./bootstrap-3.3.7.min.css" rel="stylesheet">
+		<link href="./phraseseditor.css" rel="stylesheet">
+		<title>Phrases editor</title>
+	</head>
 
-<body>
-	<div id="notification-area">
-	</div>
-	<div id="renderArea">
-	</div>
-	<nav class="navbar navbar-default navbar-fixed-bottom">
-		<div class="navbar-header">
-			<img src="icon/icon.png" class="navbar-brand-icon">
+	<body>
+		<div id="notification-area">
 		</div>
-		<ul class="nav navbar-nav">
-			<li id="loadData"><a href="#">Open</a></li>
-			<li id="reloadData"><a href="#">Reload</a></li>
-			<li id="saveData"><a href="#">Save</a></li>
-			<li id="createNew"><a href="#">Create new</a></li>
-		</ul>
-		<form class="navbar-form navbar-right" role="search">
-			<div class="form-group">
-				<input type="text" class="form-control search" placeholder="Search">
+		<div id="renderArea">
+		</div>
+		<nav class="navbar navbar-default navbar-fixed-bottom">
+			<div class="navbar-header">
+				<img src="icon/icon.png" class="navbar-brand-icon">
 			</div>
-		</form>
-	</nav>
-</body>
-<script>
-window.$ = window.jQuery = require('./jquery-2.2.4.min.js');
-const ui = require('./ui/table-ui.js');
-const controlUI = require('./ui/control-ui.js');
-const dataStorage = require('./file_io/datastorage.js');
-const settingsHandler = require('./settings/settings-handler.js');
-const surprises = require('./ui/surprises.js');
+			<ul class="nav navbar-nav">
+				<li id="loadData"><a href="#">Open</a></li>
+				<li id="reloadData"><a href="#">Reload</a></li>
+				<li id="saveData"><a href="#">Save</a></li>
+				<li id="createNew"><a href="#">Create new</a></li>
+			</ul>
+			<form class="navbar-form navbar-right" role="search">
+				<div class="form-group">
+					<input type="text" class="form-control search" placeholder="Search">
+				</div>
+			</form>
+		</nav>
+	</body>
+	<script>
+	window.$ = window.jQuery = require('./jquery-3.2.1.min.js');
+	const ui = require('./ui/table-ui.js');
+	const controlUI = require('./ui/control-ui.js');
+	const dataStorage = require('./file_io/datastorage.js');
+	const settingsHandler = require('./settings/settings-handler.js');
+	const surprises = require('./ui/surprises.js');
 
-dataStorage.getPhrasesData().addChangeListener(() => {
-	ui.updateTitle();
-});
+	dataStorage.getPhrasesData().addChangeListener(() => {
+		ui.updateTitle();
+	});
 
-settingsHandler.get().then(settings => {
-	if (settings.lastOpenDirectory) {
-		controlUI.loadDirectory(settings.lastOpenDirectory);
-	}
-	if (settings.surpriseMe) {
-		surprises.initiateSurprises();
-	}
-});
+	settingsHandler.get().then(settings => {
+		if (settings.lastOpenDirectory) {
+			controlUI.loadDirectory(settings.lastOpenDirectory);
+		}
+		if (settings.surpriseMe) {
+			surprises.initiateSurprises();
+		}
+	});
 
-controlUI.initateControls();
-</script>
+	controlUI.initateControls();
+	</script>
 
 </html>
