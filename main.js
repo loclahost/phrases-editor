@@ -73,6 +73,15 @@ function createNewWindow() {
 			{ label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
 			{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
 		]
+	}, {
+		label: "Settings",
+		submenu: [{
+			label: "Settings",
+			selector: "settings:",
+			click: function() {
+				mainWindow.webContents.send('window-command', 'open_settings');
+			}
+		}]
 	}];
 
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));

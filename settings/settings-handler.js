@@ -2,6 +2,8 @@ const app = require('electron').remote.app;
 const fs = require('fs');
 const path = require('path');
 const extend = require('extend');
+const ipcRenderer = require('electron').ipcRenderer;
+const shell = require('electron').shell;
 
 const USER_SETTINGS_PATH = path.join(app.getPath('userData'), 'phrases-editor-settings.json');
 const SYSTEM_SETTINGS_PATH = path.join(__dirname, "settings.json");
@@ -27,7 +29,7 @@ function getSettings() {
 
 		Promise.all(settingPromises).then(values => {
 			let mergedSettings = {};
-			for(let i = 0; i < values.length; i++) {
+			for (let i = 0; i < values.length; i++) {
 				mergedSettings = extend(mergedSettings, values[i]);
 			}
 			console.log(mergedSettings);
@@ -74,5 +76,12 @@ var singleton = {
 		}
 	}
 };
+
+
+ipcRenderer.on('window-command', function(event, message) {
+	if (message == 'open_settings') {
+		shell.openItem(USER_SETTINGS_PATH);
+	}
+});
 
 module.exports = singleton;
