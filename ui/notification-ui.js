@@ -29,7 +29,7 @@ function clearNotifications() {
 
 function renderNotifications() {
 	let orderedNotifications = [];
-	for(let key in notifications) {
+	for (let key in notifications) {
 		orderedNotifications.push(notifications[key]);
 	}
 
@@ -37,8 +37,8 @@ function renderNotifications() {
 	notificationArea.empty();
 
 	orderedNotifications
-	.sort((a,b) => a.timestamp - b.timestamp)
-	.forEach((element) => notificationArea.append('<div class="notification notification-type-' + element.type + '">' + element.data + '</div>'));
+		.sort((a, b) => a.timestamp - b.timestamp)
+		.forEach((element) => notificationArea.append('<div class="notification notification-type-' + element.type + '">' + element.data + '</div>'));
 }
 
 module.exports.createNotification = createNotification;

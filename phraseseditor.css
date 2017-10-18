@@ -67,7 +67,6 @@
     height: 2px;
     margin-top: -1px;
     background: #fff;
-    /* css3 */
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
@@ -82,7 +81,6 @@
     height: 10px;
     margin-top: -5px;
     background: #fff;
-    /* css3 */
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
@@ -93,7 +91,6 @@
 .remove a:before {
     width: 16px;
     height: 16px;
-    /* css3 */
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
     border-radius: 16px;

@@ -13,15 +13,15 @@ function loadData(directory) {
 	console.log('Loading files from ' + directory);
 
 	let phrasesData = {
-		meta : [],
-		fileContent : []
+		meta: [],
+		fileContent: []
 	};
 
-	if(!fs.existsSync(directory)) {
+	if (!fs.existsSync(directory)) {
 		return phrasesData;
 	}
 
-	if(fileWatch) {
+	if (fileWatch) {
 		fileWatch.close();
 	}
 
@@ -32,10 +32,10 @@ function loadData(directory) {
 	files = files.filter((element) => element.endsWith('.phrases'));
 
 	let contentMap = {};
-	for(let index = 0; index < files.length; index++) {
+	for (let index = 0; index < files.length; index++) {
 		let meta = {
-			name : files[index],
-			path : path.resolve(directory, files[index])
+			name: files[index],
+			path: path.resolve(directory, files[index])
 		};
 
 		phrasesData.meta.push(meta);
@@ -44,7 +44,7 @@ function loadData(directory) {
 		meta.md5 = createMD5(content);
 		content = content.replace('\r', '');
 		let lines = content.split('\n');
-		for(let i = 0; i < lines.length; i++) {
+		for (let i = 0; i < lines.length; i++) {
 			let phraseData = lines[i].split('~');
 			let key = phraseData[0] + '~' + phraseData[1];
 			let data = contentMap[key] || [key];
@@ -53,35 +53,35 @@ function loadData(directory) {
 		}
 	}
 
-	for(key in contentMap) {
+	for (key in contentMap) {
 		phrasesData.fileContent.push({
-			content : contentMap[key],
-			removed : false
+			content: contentMap[key],
+			removed: false
 		});
 	}
 
 
 	fileWatch = watch(directory, { recursive: true }, function(event, filename) {
-		if(filename.endsWith('.phrases') && path.dirname(filename) == directory) {
+		if (filename.endsWith('.phrases') && path.dirname(filename) == directory) {
 			let changedMeta;
-			for(let i = 0; i < phrasesData.meta.length; i++) {
-				if(phrasesData.meta[i].path == filename) {
+			for (let i = 0; i < phrasesData.meta.length; i++) {
+				if (phrasesData.meta[i].path == filename) {
 					changedMeta = phrasesData.meta[i];
 				}
 			}
 
 			let originalMD5 = changedMeta.md5;
-			if(originalMD5) {
+			if (originalMD5) {
 				fs.readFile(filename, 'utf8', function(err, data) {
-					if(err) {
+					if (err) {
 						throw err;
 					}
 
-					if(changedMeta.notificationId) {
+					if (changedMeta.notificationId) {
 						notificationUI.removeNotification(changedMeta.notificationId);
 					}
 
-					if(createMD5(data) != originalMD5) {
+					if (createMD5(data) != originalMD5) {
 						changedMeta.notificationId = notificationUI.createNotification("The file '" + filename + "' has changed on disk", 'warning');
 					}
 				});
@@ -98,29 +98,29 @@ function saveData(phrases, directory) {
 	let meta = phrases.getMeta();
 	let content = phrases.getContent();
 	content = content
-			.filter((element) => !element.removed)
-			.filter((element) => !!element.content[0])
-			.sort((a, b) => a.content[0].localeCompare(b.content[0], 'sv'));
+		.filter((element) => !element.removed)
+		.filter((element) => !!element.content[0])
+		.sort((a, b) => a.content[0].localeCompare(b.content[0], 'sv'));
 
 	let fileContent = content.map((element) => element.content);
 
-	for(let i = 0; i < meta.length; i++) {
+	for (let i = 0; i < meta.length; i++) {
 		let newContent = createPhrasesFileContents(fileContent, i + 1);
 		meta[i].md5 = createMD5(newContent);
-		fs.writeFile(meta[i].path, newContent, function() {console.log('Done writing ' + meta[i].path)});
+		fs.writeFile(meta[i].path, newContent, function() { console.log('Done writing ' + meta[i].path) });
 	}
 
 	settingsHandler.get().then(settings => {
-		if(settings.generateJavaEnum) {
-			javaEnumFactory.createJavaContent(fileContent, directory).then(content => fs.writeFile(path.resolve(directory,'Translation.java'), content, function() {console.log('Done writing java translations')}));
+		if (settings.generateJavaEnum) {
+			javaEnumFactory.createJavaContent(fileContent, directory).then(content => fs.writeFile(path.resolve(directory, 'Translation.java'), content, function() { console.log('Done writing java translations') }));
 		}
 	});
 
 	function createPhrasesFileContents(content, index) {
 		let fileContentArray = [];
-		for(let i = 0; i < content.length; i++) {
+		for (let i = 0; i < content.length; i++) {
 			let keyMapping = content[i][index];
-			if(keyMapping) {
+			if (keyMapping) {
 				fileContentArray.push(content[i][0] + '~' + keyMapping);
 			}
 		}

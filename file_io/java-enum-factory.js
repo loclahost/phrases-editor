@@ -7,10 +7,10 @@ function createJavaContent(phrasesArray, currentPath) {
 			let content = 'package ' + guessPackageName() + ';\n\npublic class Translation {\n';
 			let currentNamespace = '';
 			let currentKeys = [];
-			for(let i = 0; i < phrasesArray.length; i++) {
+			for (let i = 0; i < phrasesArray.length; i++) {
 				let phraseKey = phrasesArray[i][0].split('~');
-				if(phraseKey[0] != currentNamespace) {
-					if(currentNamespace != '') {
+				if (phraseKey[0] != currentNamespace) {
+					if (currentNamespace != '') {
 						content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n';
 						content += createEnumEnd(currentNamespace);
 					}
@@ -21,7 +21,7 @@ function createJavaContent(phrasesArray, currentPath) {
 
 				currentKeys.push(createEnumConstant(phraseKey[1]));
 			}
-			if(currentNamespace != '') {
+			if (currentNamespace != '') {
 				content += currentKeys.join(',\n') + ';\n';
 				content += createEnumEnd(currentNamespace);
 			}
@@ -66,10 +66,10 @@ function createJavaContent(phrasesArray, currentPath) {
 			let rootFound = false;
 			let pathElements = currentPath.split(path.sep);
 			let packageElements = [];
-			for(let i = 0; i < pathElements.length; i++) {
-				if(rootFound) {
+			for (let i = 0; i < pathElements.length; i++) {
+				if (rootFound) {
 					packageElements.push(createValidPackageName(pathElements[i]));
-				} else if(settings.srcRoots.indexOf(pathElements[i]) != -1) {
+				} else if (settings.srcRoots.indexOf(pathElements[i]) != -1) {
 					rootFound = true;
 				}
 			}
@@ -78,10 +78,10 @@ function createJavaContent(phrasesArray, currentPath) {
 		}
 
 		function createValidPackageName(name) {
-			if(/^\d/.test(name)) {
+			if (/^\d/.test(name)) {
 				name = '_' + name;
 			}
-			if(name.indexOf('-') != -1) {
+			if (name.indexOf('-') != -1) {
 				name = name.replace('-', '_');
 			}
 
@@ -93,12 +93,13 @@ function createJavaContent(phrasesArray, currentPath) {
 		return new Promise((resolve, reject) => resolve(createJavaEnums()));
 	});
 }
+
 function createValidEnumName(name) {
 	return name.replace(/^\d|\W+/gm, "_").toUpperCase();
 }
 
 function createJavaKey(phraseKey) {
-	if(!phraseKey) {
+	if (!phraseKey) {
 		return "";
 	}
 	let keyParts = phraseKey.split('~');
