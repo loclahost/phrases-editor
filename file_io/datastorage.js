@@ -90,9 +90,11 @@ function load(directory) {
 		directoryPath = directory;
 	}
 	phrasesData.setState('load');
-	let newContent = fileHandler.loadData(directoryPath);
-	phrasesData.setContent(newContent.fileContent, newContent.meta);
-	phrasesData.setState('idle');
+	return fileHandler.loadData(directoryPath)
+		.then(newContent => {
+			phrasesData.setContent(newContent.fileContent, newContent.meta);
+			phrasesData.setState('idle');
+		});
 }
 
 module.exports.getDirectoryPath = getDirectoryPath;

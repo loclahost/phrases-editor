@@ -14,15 +14,17 @@ function choseDirectoryAndLoadData() {
 	let dialog = require('electron').remote.dialog;
 	let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
 	if (fileNames && fileNames.length) {
-		loadAndRender(fileNames[0]);
-		$('button').prop("disabled", false);
-		settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
+		loadAndRender(fileNames[0])
+			.then(() => {
+				$('button').prop("disabled", false);
+				settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
+			});
 	};
 }
 
 function loadAndRender(directory) {
-	dataStorage.load(directory);
-	ui.renderData();
+	return dataStorage.load(directory)
+		.then(() => ui.renderData());
 }
 
 function createNewRow() {

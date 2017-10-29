@@ -1,5 +1,5 @@
 const app = require('electron').remote.app;
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const extend = require('extend');
 const ipcRenderer = require('electron').ipcRenderer;
@@ -10,15 +10,7 @@ const SYSTEM_SETTINGS_PATH = path.join(__dirname, "settings.json");
 
 function load(path) {
 	console.log('Reading settings from ' + path);
-	return new Promise((resolve, reject) => {
-		fs.readFile(path, 'utf-8', (err, obj) => {
-			if (err) {
-				resolve({});
-			} else {
-				resolve(JSON.parse(obj));
-			}
-		});
-	});
+	return fs.readJson(path, { throws: false });
 }
 
 function getSettings() {
@@ -43,11 +35,8 @@ function getSettings() {
 function updateSettings(newSettings, path) {
 	load(path)
 		.then(oldSettings => extend(oldSettings, newSettings))
-		.then(mergedSettings => fs.writeFile(path, JSON.stringify(mergedSettings), (err) => {
-			if (err) {
-				console.error(err);
-			}
-		}));
+		.then(mergedSettings => fs.writeFile(path, JSON.stringify(mergedSettings)))
+		.catch(err => console.log(err));
 
 	global[SETTINGS_KEY] = new Promise((resolve, reject) => resolve(extend(global[SETTINGS_KEY], newSettings)));
 }
