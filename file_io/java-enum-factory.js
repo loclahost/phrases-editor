@@ -11,7 +11,7 @@ function createJavaContent(phrasesArray, currentPath) {
 				let phraseKey = phrasesArray[i][0].split('~');
 				if (phraseKey[0] != currentNamespace) {
 					if (currentNamespace != '') {
-						content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n';
+						content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n\n';
 						content += createEnumEnd(currentNamespace);
 					}
 					currentNamespace = phraseKey[0];
@@ -22,7 +22,7 @@ function createJavaContent(phrasesArray, currentPath) {
 				currentKeys.push(createEnumConstant(phraseKey[1]));
 			}
 			if (currentNamespace != '') {
-				content += currentKeys.join(',\n') + ';\n';
+				content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n\n';
 				content += createEnumEnd(currentNamespace);
 			}
 			content += "}\n";
