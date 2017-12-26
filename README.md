@@ -12,7 +12,8 @@ The editor supports settings to control different features, mostly regarding the
 "localeService":"fully qualified way to get your localeservice",
 "srcRoots":["list of folders which might be a source root of your project","usually something like src"],
 "supriseMe":false,
-"filterOnEnter":false
+"filterOnEnter":false,
+"highlightMatchedPhrase":false
 }
 ```
 
