@@ -4,6 +4,8 @@ const Mustache = require('mustache');
 const javaEnumFactory = require('../file_io/java-enum-factory.js');
 const clipboard = require('electron').remote.clipboard;
 
+const removeHighlightRegExp = new RegExp('<span class="matching-text">(.+)<\/span>', 'i');
+
 function renderData() {
 	$('#renderArea').empty().append(createContexts());
 	$('.content').click(function() {
@@ -13,18 +15,21 @@ function renderData() {
 }
 
 function filterForSearch() {
-	var searchValue = $('input.search').val();
-	var removeHighlightRegExp = new RegExp('<span class="matching-text">(.+)<\/span>', 'i');
+	filterContext($('#renderArea .content'));
+}
+
+function filterContext(context) {
+	let searchValue = $('input.search').val();
 
 	settingsHandler.get().then(settings => {
 		if (searchValue && searchValue.length > 1) {
-			var searchRegExp = new RegExp('(' + searchValue + ')', 'i');
+			let searchRegExp = new RegExp('(' + searchValue + ')', 'i');
 			if (settings.highlightMatchedPhrase) {
-				$('#renderArea .content').each(function() {
-					var row = $(this);
-					var matchedRow = false;
+				context.each(function() {
+					let row = $(this);
+					let matchedRow = false;
 					$('.column span', row).each(function() {
-						var span = $(this);
+						let span = $(this);
 						span.text(span.html().replace(removeHighlightRegExp, '$1'));
 						if (searchRegExp.test(span.text())) {
 							matchedRow = true;
@@ -34,20 +39,19 @@ function filterForSearch() {
 					row.toggle(matchedRow);
 				});
 			} else {
-				$('#renderArea .content').each(function() {
-					var row = $(this);
+				context.each(function() {
+					let row = $(this);
 					row.toggle(searchRegExp.test(row.text()));
 				});
 			}
 		} else {
 			if (settings.highlightMatchedPhrase) {
-				$('#renderArea .content .column span').each(function() {
-					var span = $(this);
+				$('.column span', context).each(function() {
+					let span = $(this);
 					span.text(span.html().replace(removeHighlightRegExp, '$1'));
 				});
 			}
-			$('#renderArea .content').show();
-
+			context.show();
 		}
 
 	});
@@ -192,6 +196,8 @@ function transformToView(clickedTr) {
 	if (clickedTr.offset().top < $(window).scrollTop()) {
 		$('html,body').animate({ scrollTop: clickedTr.offset().top });
 	}
+
+	filterContext(clickedTr);
 }
 
 function addRow() {
