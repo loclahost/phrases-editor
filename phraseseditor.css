@@ -166,6 +166,10 @@
     transition: width 2s, height 2s, background-color 2s, transform 2s;
 }
 
+.matching-text {
+    font-weight: bolder;
+}
+
 body {
     padding-bottom: 70px;
 }

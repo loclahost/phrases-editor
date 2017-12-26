@@ -14,15 +14,43 @@ function renderData() {
 
 function filterForSearch() {
 	var searchValue = $('input.search').val();
-	if (searchValue && searchValue.length > 1) {
-		var searchRegExp = new RegExp(searchValue, 'i');
-		$('#renderArea .content').each(function() {
-			var row = $(this);
-			row.toggle(searchRegExp.test(row.text()));
-		});
-	} else {
-		$('#renderArea .content').show();
-	}
+	var removeHighlightRegExp = new RegExp('<span class="matching-text">(.+)<\/span>', 'i');
+
+	settingsHandler.get().then(settings => {
+		if (searchValue && searchValue.length > 1) {
+			var searchRegExp = new RegExp('(' + searchValue + ')', 'i');
+			if (settings.highlightMatchedPhrase) {
+				$('#renderArea .content').each(function() {
+					var row = $(this);
+					var matchedRow = false;
+					$('.column span', row).each(function() {
+						var span = $(this);
+						span.text(span.html().replace(removeHighlightRegExp, '$1'));
+						if (searchRegExp.test(span.text())) {
+							matchedRow = true;
+							span.html(span.text().replace(searchRegExp, '<span class="matching-text">$1</span>'));
+						}
+					});
+					row.toggle(matchedRow);
+				});
+			} else {
+				$('#renderArea .content').each(function() {
+					var row = $(this);
+					row.toggle(searchRegExp.test(row.text()));
+				});
+			}
+		} else {
+			if (settings.highlightMatchedPhrase) {
+				$('#renderArea .content .column span').each(function() {
+					var span = $(this);
+					span.text(span.html().replace(removeHighlightRegExp, '$1'));
+				});
+			}
+			$('#renderArea .content').show();
+
+		}
+
+	});
 }
 
 function createContexts() {
