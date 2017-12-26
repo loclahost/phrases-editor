@@ -183,6 +183,11 @@ function transformToForm(clickedTr) {
 
 		transformToView(clickedTr);
 	});
+
+	if ((clickedTr.offset().top + clickedTr.height()) > ($(window).scrollTop() + $(window).height())) {
+		$('html,body').animate({ scrollTop: clickedTr.offset().top });
+	}
+
 }
 
 function transformToView(clickedTr) {
