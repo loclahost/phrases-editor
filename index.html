@@ -49,6 +49,15 @@
 		if (settings.surpriseMe) {
 			surprises.initiateSurprises();
 		}
+
+		if (settings.customCssPath) {
+			var styles = document.createElement('link');
+			styles.rel = 'stylesheet';
+			styles.type = 'text/css';
+			styles.media = 'screen';
+			styles.href = settings.customCssPath;
+			document.getElementsByTagName('head')[0].appendChild(styles);
+		}
 	});
 
 	controlUI.initateControls();
