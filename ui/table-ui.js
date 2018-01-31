@@ -4,12 +4,13 @@ const Mustache = require('mustache');
 const javaEnumFactory = require('../file_io/java-enum-factory.js');
 const clipboard = require('electron').remote.clipboard;
 
-const removeHighlightRegExp = new RegExp('<span class="matching-text">(.+)<\/span>', 'i');
-
 function renderData() {
 	$('#renderArea').empty().append(createContexts());
-	$('.content').click(function() {
-		transformToForm($(this));
+	let content = $('.content').click(function() { transformToForm($(this)) });
+	settingsHandler.get().then(settings => {
+		if (settings.highlightMatchedPhrase) {
+			content.mouseenter(highlightMatch).mouseleave(dropHighlights);
+		}
 	});
 	filterForSearch();
 }
@@ -20,41 +21,15 @@ function filterForSearch() {
 
 function filterContext(context) {
 	let searchValue = $('input.search').val();
-
-	settingsHandler.get().then(settings => {
-		if (searchValue && searchValue.length > 1) {
-			let searchRegExp = new RegExp('(' + searchValue + ')', 'i');
-			if (settings.highlightMatchedPhrase) {
-				context.each(function() {
-					let row = $(this);
-					let matchedRow = false;
-					$('.column span', row).each(function() {
-						let span = $(this);
-						span.text(span.html().replace(removeHighlightRegExp, '$1'));
-						if (searchRegExp.test(span.text())) {
-							matchedRow = true;
-							span.html(span.text().replace(searchRegExp, '<span class="matching-text">$1</span>'));
-						}
-					});
-					row.toggle(matchedRow);
-				});
-			} else {
-				context.each(function() {
-					let row = $(this);
-					row.toggle(searchRegExp.test(row.text()));
-				});
-			}
-		} else {
-			if (settings.highlightMatchedPhrase) {
-				$('.column span', context).each(function() {
-					let span = $(this);
-					span.text(span.html().replace(removeHighlightRegExp, '$1'));
-				});
-			}
-			context.show();
-		}
-
-	});
+	if (searchValue && searchValue.length > 1) {
+		let searchRegExp = new RegExp(searchValue, 'i');
+		context.each(function() {
+			let row = $(this);
+			row.toggle(searchRegExp.test(row.text()));
+		});
+	} else {
+		context.show();
+	}
 }
 
 function createContexts() {
@@ -216,6 +191,11 @@ function addRow() {
 	newTr.click(function() {
 		transformToForm($(this));
 	});
+	settingsHandler.get().then(settings => {
+		if (settings.highlightMatchedPhrase) {
+			newTr.mouseenter(highlightMatch).mouseleave(dropHighlights);
+		}
+	});
 
 	newTr.click();
 
@@ -254,6 +234,36 @@ function updateTitle() {
 			break;
 	}
 	document.title = title;
+}
+
+function highlightMatch() {
+	let context = $(this);
+	let searchValue = $('input.search').val();
+
+	if (searchValue && searchValue.length > 1) {
+		let searchRegExp = new RegExp('(' + searchValue + ')', 'ig');
+
+		context.each(function() {
+			let row = $(this);
+			$('.column span', row).each(function() {
+				let span = $(this);
+				if (searchRegExp.test(span.text())) {
+					span.html(span.text().replace(searchRegExp, '<span class="matching-text">$1</span>'));
+				}
+			});
+		});
+	}
+}
+
+function dropHighlights() {
+	let removeHighlightRegExp = new RegExp('<span class="matching-text">(.+?)<\/span>', 'ig');
+	let context = $(this);
+	$('.column span', context).each(function() {
+		let span = $(this);
+		if ($('.matching-text', span).length > 0) {
+			span.text(span.html().replace(removeHighlightRegExp, '$1'));
+		}
+	});
 }
 
 module.exports.renderData = renderData;
