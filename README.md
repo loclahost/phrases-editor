@@ -14,8 +14,11 @@ The editor supports settings to control different features, mostly regarding the
 "surpriseMe":false,
 "filterOnEnter":false,
 "highlightMatchedPhrase":false,
-"customCssPath":"path to custom css file, appended last in head if set"
+"customCssPath":"path to custom css file, appended last in head if set",
+"javaFactory":"enum or class"
 }
 ```
 
 The user settings ends up in a file called **phrases-editor-settings.json** in your config directory. The easiest way to edit the file is to use the settings menu entry, which will open the settings file in the system default editor.
+
+Note of the javaFactory setting: This is due to the method-may-not-be-larger-than-64KB feature of java. If you get a "Code too large" compile error in the translation file you might want to use "class".

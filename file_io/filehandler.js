@@ -2,7 +2,7 @@ const watch = require('node-watch');
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs-extra');
-const javaEnumFactory = require('./java-enum-factory.js');
+const javaFactoryFactory = require('./java-factory-factory.js');
 const settingsHandler = require('../settings/settings-handler.js');
 const notificationUI = require('../ui/notification-ui.js');
 
@@ -95,13 +95,7 @@ function saveData(phrases, directory) {
 			.then(() => console.log('Done writing ' + meta[i].path));
 	}
 
-	settingsHandler.get().then(settings => {
-		if (settings.generateJavaEnum) {
-			javaEnumFactory.createJavaContent(fileContent, directory)
-				.then(content => fs.writeFile(path.resolve(directory, 'Translation.java'), content))
-				.then(() => console.log('Done writing java translations'));
-		}
-	});
+	javaFactoryFactory.generateJavaConstants(fileContent, directory);
 
 	function createPhrasesFileContents(content, index) {
 		let fileContentArray = [];

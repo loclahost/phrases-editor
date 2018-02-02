@@ -1,7 +1,7 @@
 const dataStorage = require('../file_io/datastorage.js');
-const templateLoader = require('./templates/template-loader.js');
+const templateLoader = require('../templates/template-loader.js');
 const Mustache = require('mustache');
-const javaEnumFactory = require('../file_io/java-enum-factory.js');
+const javaUtil = require('../file_io/java-util.js');
 const clipboard = require('electron').remote.clipboard;
 
 function renderData() {
@@ -45,14 +45,14 @@ function createContexts() {
 
 	let headerContext = createHeaderContexts(phrases);
 
-	return Mustache.render(templateLoader.getTemplate('phrases-table'), {
+	return Mustache.render(templateLoader.getUITemplate('phrases-table'), {
 		header: {
 			heading: headerContext
 		},
 		content: phrasesContexts
 	}, {
-		'phrase-row': templateLoader.getTemplate('phrase-row'),
-		'view-content': templateLoader.getTemplate('row-view-content')
+		'phrase-row': templateLoader.getUITemplate('phrase-row'),
+		'view-content': templateLoader.getUITemplate('row-view-content')
 	});
 }
 
@@ -106,9 +106,9 @@ function transformToForm(clickedTr) {
 		});
 	}
 
-	clickedTr.html(Mustache.render(templateLoader.getTemplate('row-edit-content'), {
+	clickedTr.html(Mustache.render(templateLoader.getUITemplate('row-edit-content'), {
 		phrases: formContext,
-		enumKey: javaEnumFactory.createJavaKey(phrasesArray[index].content[0]),
+		enumKey: javaUtil.createJavaKey(phrasesArray[index].content[0]),
 		removed: phrasesArray[index].removed
 	}));
 
@@ -170,7 +170,7 @@ function transformToView(clickedTr) {
 	let phrases = dataStorage.getPhrasesData();
 	let phrasesArray = phrases.getContent();
 
-	clickedTr.html(Mustache.render(templateLoader.getTemplate('row-view-content'), createRowContext(phrasesArray, index)));
+	clickedTr.html(Mustache.render(templateLoader.getUITemplate('row-view-content'), createRowContext(phrasesArray, index)));
 	clickedTr.removeClass('is-form');
 
 	if (clickedTr.offset().top < $(window).scrollTop()) {
@@ -184,8 +184,8 @@ function addRow() {
 	let phrases = dataStorage.getPhrasesData();
 	let newIndex = phrases.addContentRow();
 	let context = createRowContext(phrases.getContent(), newIndex);
-	let newTr = $(Mustache.render(templateLoader.getTemplate('phrase-row'), context, {
-		'view-content': templateLoader.getTemplate('row-view-content')
+	let newTr = $(Mustache.render(templateLoader.getUITemplate('phrase-row'), context, {
+		'view-content': templateLoader.getUITemplate('row-view-content')
 	}));
 	newTr.appendTo($('#renderArea table'));
 	newTr.click(function() {

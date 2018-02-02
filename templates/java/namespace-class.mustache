@@ -1,0 +1,25 @@
+	public static class {{ namespace }} {
+
+		{{# initFunctions }}
+		{{# phraseConstants }}
+		public static TranslatableConstant {{ constantName }} = null;
+		{{/ phraseConstants }}
+		{{/ initFunctions }}
+
+		static {
+			{{# initFunctions }}
+			{{ functionName }}();
+			{{/ initFunctions }}
+		}
+
+		{{# initFunctions }}
+		private static void {{ functionName }}() {
+			{{# phraseConstants }}
+			{{ namespace }}.{{ constantName }} = new TranslatableConstant("{{ constantName }}", "{{ namespace }}", "{{ constantKey }}");
+			{{/ phraseConstants }}
+		}
+		{{/ initFunctions }}
+
+		private {{ namespace }}() {}
+	}
+
