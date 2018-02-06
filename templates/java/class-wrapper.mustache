@@ -9,9 +9,9 @@ public class Translation {
 	{{/ namespaceClasses }}
 
 	public static class TranslatableConstant implements {{translationInterface}} {
-		private String name;
-		private String namespace;
-		private String key;
+		private final String name;
+		private final String namespace;
+		private final String key;
 
 		public TranslatableConstant(String name, String namespace, String key) {
 			this.name = name;
