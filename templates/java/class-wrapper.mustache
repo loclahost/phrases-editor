@@ -1,4 +1,4 @@
-package {{ packageName }};
+package {{{ packageName }}};
 
 public class Translation {
 
@@ -6,7 +6,7 @@ public class Translation {
 	{{> namespace-class }}
 	{{/ namespaceClasses }}
 
-	public static class TranslatableConstant implements {{translationInterface}} {
+	public static class TranslatableConstant implements {{{ translationInterface }}} {
 		private final String name;
 		private final String namespace;
 		private final String key;
@@ -18,13 +18,13 @@ public class Translation {
 		}
 
 		@Override
-		public String getTranslation({{localeInterface}} loc) {
+		public String getTranslation({{{ localeInterface }}} loc) {
 			return loc.translate(key, namespace);
 		}
 
 		@Override
 		public String toString() {
-			return getTranslation({{localeService}}.getCurrentLocale());
+			return getTranslation({{{ localeService }}}.getCurrentLocale());
 		}
 
 		@Override
