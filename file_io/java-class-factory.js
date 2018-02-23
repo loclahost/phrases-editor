@@ -44,7 +44,7 @@ function createJavaContent(phrasesArray, currentPath) {
 			let initFunctionMap = {};
 			keys
 				.map(key => {
-					return { constantName: javaUtil.createValidEnumName(key), constantKey: key };
+					return { constantName: javaUtil.createValidEnumName(key), constantKey: key.replace(/"/g, '\\"') };
 				})
 				.forEach((value, index) => {
 					let functionName = "init" + Math.floor(index / 500);
