@@ -3,11 +3,9 @@ const ui = require('./table-ui.js');
 const settingsHandler = require('../settings/settings-handler.js');
 const ipcRenderer = require('electron').ipcRenderer;
 
-function saveAndRerenderIfDirty() {
-	if (dataStorage.isDirty()) {
-		dataStorage.save();
-		ui.renderData();
-	}
+function saveAndRerender() {
+	dataStorage.save();
+	ui.renderData();
 }
 
 function choseDirectoryAndLoadData() {
@@ -55,7 +53,7 @@ function initateControls() {
 
 	let saveData = function(event) {
 		delayButtonRepeatClick($(this), saveData, event);
-		saveAndRerenderIfDirty();
+		saveAndRerender();
 	};
 	$('#saveData').click(saveData);
 
@@ -99,7 +97,7 @@ ipcRenderer.on('window-command', function(event, message) {
 			loadAndRender();
 			break;
 		case 'save':
-			saveAndRerenderIfDirty();
+			saveAndRerender();
 			break;
 		case 'new':
 			createNewRow();
