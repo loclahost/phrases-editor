@@ -12,6 +12,9 @@ const defaultFactory = 'enum';
 
 function generateJavaConstants(fileContent, directory) {
 	settingsHandler.get().then(settings => {
+		if (!settings.generateJavaEnum) {
+			return;
+		}
 		let factory = settings.javaFactory || defaultFactory;
 		console.log("Using java factory '" + factory + "'. Settings set to '" + settings.javaFactory + "'");
 		factories[factory].createJavaContent(fileContent, directory)
