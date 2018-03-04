@@ -15,7 +15,7 @@ The editor supports settings to control different features, mostly regarding the
 	"localeInterface":"fully qualified name of your locale",
 	"localeService":"fully qualified way to get your localeservice",
 	"srcRoots":["list of folders which might be a source root of your project","usually something like src"],
-}
+},
 "keyGenerator" : {
 	"namespace" : "The namespace for all translations",
 	"sourceLocale" : "which locale (file name) to use as source for keys"
