@@ -11,7 +11,6 @@ The editor supports settings to control different features, mostly regarding the
 "localeInterface":"fully qualified name of your locale",
 "localeService":"fully qualified way to get your localeservice",
 "srcRoots":["list of folders which might be a source root of your project","usually something like src"],
-"surpriseMe":false,
 "filterOnEnter":false,
 "highlightMatchedPhrase":false,
 "customCssPath":"path to custom css file, appended last in head if set",
