@@ -97,9 +97,14 @@ function load(directory) {
 		});
 }
 
+function getMetaIndexForLocale(locale) {
+	return phrasesData.getMeta().findIndex(element => element.name == locale);
+}
+
 module.exports.getDirectoryPath = getDirectoryPath;
 module.exports.getPhrasesData = getPhrasesData;
 module.exports.save = save;
 module.exports.load = load;
 module.exports.isDirty = phrasesData.isDirty;
 module.exports.getState = phrasesData.getState;
+module.exports.getMetaIndexForLocale = getMetaIndexForLocale;

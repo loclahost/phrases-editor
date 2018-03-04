@@ -3,6 +3,7 @@ const templateLoader = require('../templates/template-loader.js');
 const Mustache = require('mustache');
 const javaUtil = require('../file_io/java-util.js');
 const clipboard = require('electron').remote.clipboard;
+const settingsHandler = require('../settings/settings-handler.js');
 
 function renderData() {
 	$('#renderArea').empty().append(createContexts());
@@ -111,6 +112,20 @@ function transformToForm(clickedTr) {
 		enumKey: javaUtil.createJavaKey(phrasesArray[index].content[0]),
 		removed: phrasesArray[index].removed
 	}));
+
+	settingsHandler.get().then(settings => {
+		var keyGeneratorSettings = settings.keyGenerator;
+		if (!keyGeneratorSettings) {
+			return;
+		}
+
+		$('input', clickedTr).on('input', function() {
+			let input = $(this);
+			if (input.data("meta") == dataStorage.getMetaIndexForLocale(keyGeneratorSettings.sourceLocale)) {
+				$('input', clickedTr).first().val(keyGeneratorSettings.namespace + "~" + input.val());
+			}
+		});
+	});
 
 	$('.cancel-button', clickedTr).click(function(event) {
 		event.stopPropagation();
