@@ -1,70 +1,68 @@
-const settingsHandler = require('../settings/settings-handler.js');
 const javaUtil = require("./java-util.js");
 const path = require('path');
 
-function createJavaContent(phrasesArray, currentPath) {
-	return settingsHandler.get().then(settings => {
-		function createJavaEnums() {
-			let content = 'package ' + javaUtil.guessPackageName(currentPath, settings) + ';\n\npublic class Translation {\n';
-			let currentNamespace = '';
-			let currentKeys = [];
-			for (let i = 0; i < phrasesArray.length; i++) {
-				let phraseKey = phrasesArray[i][0].split('~');
-				if (phraseKey[0] != currentNamespace) {
-					if (currentNamespace != '') {
-						content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n\n';
-						content += createEnumEnd(currentNamespace);
-					}
-					currentNamespace = phraseKey[0];
-					content += createEnumStart(currentNamespace);
-					currentKeys = [];
+function createJavaContent(phrasesArray, currentPath, settings) {
+	function createJavaEnums() {
+		let content = 'package ' + javaUtil.guessPackageName(currentPath, settings) + ';\n\npublic class Translation {\n';
+		let currentNamespace = '';
+		let currentKeys = [];
+		for (let i = 0; i < phrasesArray.length; i++) {
+			let phraseKey = phrasesArray[i][0].split('~');
+			if (phraseKey[0] != currentNamespace) {
+				if (currentNamespace != '') {
+					content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n\n';
+					content += createEnumEnd(currentNamespace);
 				}
-
-				currentKeys.push(createEnumConstant(phraseKey[1]));
+				currentNamespace = phraseKey[0];
+				content += createEnumStart(currentNamespace);
+				currentKeys = [];
 			}
-			if (currentNamespace != '') {
-				content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n\n';
-				content += createEnumEnd(currentNamespace);
-			}
-			content += "}\n";
-			return content;
+
+			currentKeys.push(createEnumConstant(phraseKey[1]));
 		}
-
-		function createEnumStart(rawNamespace) {
-			return "\tpublic enum " + javaUtil.createValidEnumName(rawNamespace) + " implements " + settings.translationInterface + " {\n";
+		if (currentNamespace != '') {
+			content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n\n';
+			content += createEnumEnd(currentNamespace);
 		}
+		content += "}\n";
+		return content;
+	}
 
-		function createEnumConstant(key) {
-			return javaUtil.createValidEnumName(key) + '("' + key.replace(/"/g, '\\"') + '")';
-		}
+	function createEnumStart(rawNamespace) {
+		return "\tpublic enum " + javaUtil.createValidEnumName(rawNamespace) + " implements " + settings.translationInterface + " {\n";
+	}
 
-		function createEnumEnd(rawNamespace) {
-			let namespace = javaUtil.createValidEnumName(rawNamespace);
+	function createEnumConstant(key) {
+		return javaUtil.createValidEnumName(key) + '("' + key.replace(/"/g, '\\"') + '")';
+	}
 
-			let javaEnum = '\t\tprivate String key;\n';
-			javaEnum += '\t\tprivate static final String namespace = "' + rawNamespace + '";\n\n';
+	function createEnumEnd(rawNamespace) {
+		let namespace = javaUtil.createValidEnumName(rawNamespace);
 
-			javaEnum += '\t\tprivate ' + namespace + '(String key) {\n';
-			javaEnum += '\t\t\tthis.key = key;\n';
-			javaEnum += '\t\t}\n\n';
+		let javaEnum = '\t\tprivate String key;\n';
+		javaEnum += '\t\tprivate static final String namespace = "' + rawNamespace + '";\n\n';
 
-			javaEnum += '\t\t@Override\n';
-			javaEnum += '\t\tpublic String getTranslation(' + settings.localeInterface + ' loc) {\n';
-			javaEnum += '\t\t\treturn loc.translate(key, namespace);\n';
-			javaEnum += '\t\t}\n\n';
+		javaEnum += '\t\tprivate ' + namespace + '(String key) {\n';
+		javaEnum += '\t\t\tthis.key = key;\n';
+		javaEnum += '\t\t}\n\n';
 
-			javaEnum += '\t\t@Override\n';
-			javaEnum += '\t\tpublic String toString() {\n';
-			javaEnum += '\t\t\treturn getTranslation(' + settings.localeService + '.getCurrentLocale());\n';
-			javaEnum += '\t\t}\n\n';
+		javaEnum += '\t\t@Override\n';
+		javaEnum += '\t\tpublic String getTranslation(' + settings.localeInterface + ' loc) {\n';
+		javaEnum += '\t\t\treturn loc.translate(key, namespace);\n';
+		javaEnum += '\t\t}\n\n';
 
-			javaEnum += "\t}\n\n";
+		javaEnum += '\t\t@Override\n';
+		javaEnum += '\t\tpublic String toString() {\n';
+		javaEnum += '\t\t\treturn getTranslation(' + settings.localeService + '.getCurrentLocale());\n';
+		javaEnum += '\t\t}\n\n';
 
-			return javaEnum;
-		}
+		javaEnum += "\t}\n\n";
 
-		return new Promise((resolve, reject) => resolve(createJavaEnums()));
-	});
+		return javaEnum;
+	}
+
+	return new Promise((resolve, reject) => resolve(createJavaEnums()));
+
 }
 
 module.exports.createJavaContent = createJavaContent;

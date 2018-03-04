@@ -12,12 +12,13 @@ const defaultFactory = 'enum';
 
 function generateJavaConstants(fileContent, directory) {
 	settingsHandler.get().then(settings => {
-		if (!settings.generateJavaEnum) {
+		var javaGeneratorSettings = settings.javaGenerator;
+		if (!javaGeneratorSettings) {
 			return;
 		}
-		let factory = settings.javaFactory || defaultFactory;
-		console.log("Using java factory '" + factory + "'. Settings set to '" + settings.javaFactory + "'");
-		factories[factory].createJavaContent(fileContent, directory)
+		let factory = javaGeneratorSettings.javaFactory || defaultFactory;
+		console.log("Using java factory '" + factory + "'.");
+		factories[factory].createJavaContent(fileContent, directory, javaGeneratorSettings)
 			.then(content => fs.writeFile(path.resolve(directory, 'Translation.java'), content))
 			.then(() => console.log('Done writing java translations'));
 
