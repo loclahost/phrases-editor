@@ -15,11 +15,6 @@ function createNewWindow() {
 	var template = [{
 		label: "Application",
 		submenu: [{
-				label: 'Toggle Developer Tools',
-				accelerator: 'Alt+Command+I',
-				click: function() { mainWindow.toggleDevTools(); }
-			},
-			{
 				label: "Open",
 				accelerator: "CmdOrCtrl+O",
 				selector: "open:",
@@ -51,6 +46,7 @@ function createNewWindow() {
 					mainWindow.webContents.send('window-command', 'new');
 				}
 			},
+			{ type: "separator" },
 			{ label: "Hide", accelerator: "Command+H", click: function() { app.hide(); } },
 			{ label: "Quit", accelerator: "CmdOrCtrl+Q", click: function() { app.quit(); } }
 		]
@@ -74,14 +70,23 @@ function createNewWindow() {
 			{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
 		]
 	}, {
-		label: "Settings",
+		label: "Misc",
 		submenu: [{
-			label: "Settings",
-			selector: "settings:",
-			click: function() {
-				mainWindow.webContents.send('window-command', 'open_settings');
+				label: "Settings",
+				selector: "settings:",
+				click: function() {
+					mainWindow.webContents.send('window-command', 'open_settings');
+				}
+			},
+			{
+				label: 'Toggle Developer Tools',
+				accelerator: 'Alt+Command+I',
+				click: function() { mainWindow.toggleDevTools(); }
+			},
+			{
+				label: 'Version: ' + app.getVersion()
 			}
-		}]
+		]
 	}];
 
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
