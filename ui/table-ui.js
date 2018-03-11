@@ -116,15 +116,16 @@ function transformToForm(clickedTr) {
 	settingsHandler.get().then(settings => {
 		var keyGeneratorSettings = settings.keyGenerator;
 		if (!keyGeneratorSettings) {
+			$('input.locale-index--1', clickedTr).focus();
 			return;
 		}
 
-		$('input', clickedTr).on('input', function() {
-			let input = $(this);
-			if (input.data("meta") == dataStorage.getMetaIndexForLocale(keyGeneratorSettings.sourceLocale)) {
+		$('input.locale-index-' + dataStorage.getMetaIndexForLocale(keyGeneratorSettings.sourceLocale), clickedTr)
+			.focus()
+			.on('input', function() {
+				let input = $(this);
 				$('input', clickedTr).first().val(keyGeneratorSettings.namespace + "~" + input.val());
-			}
-		});
+			});
 	});
 
 	$('.cancel-button', clickedTr).click(function(event) {

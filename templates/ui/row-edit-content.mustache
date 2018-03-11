@@ -10,7 +10,7 @@
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="{{ phrase-index }}_{{ locale }}">{{ locale }}</label>
 			<div class="col-sm-11">
-				<input type="text" class="form-control" data-meta="{{ meta-index }}" placeholder="A value" {{# value }}value="{{ value }}"{{/ value }}>
+				<input type="text" class="form-control locale-index-{{ meta-index }}" data-meta="{{ meta-index }}" placeholder="A value" {{# value }}value="{{ value }}"{{/ value }}>
 			</div>
 		</div>
 		{{/ phrases }}
