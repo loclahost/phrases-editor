@@ -10,7 +10,7 @@ const SYSTEM_SETTINGS_PATH = path.join(__dirname, "settings.json");
 
 function load(path) {
 	console.log('Reading settings from ' + path);
-	return fs.readJson(path, { throws: false });
+	return fs.readJson(path);
 }
 
 function getSettings() {
