@@ -29,6 +29,10 @@ Note of the javaFactory setting: This is due to the method-may-not-be-larger-tha
 
 ## Release notes
 
+### 2.0.1
+* Fix missing focus when editing a phrase
+* The application is now strict when parsing the json settings file
+
 ### 2.0.0
 * Feature: Autogenerate key from selected locale using a fixed namespace. Check the **keyGenerator** settings
 * Removed: Surprises are now dropped. It was a silly idea.
