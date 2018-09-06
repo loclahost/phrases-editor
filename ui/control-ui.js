@@ -2,27 +2,69 @@ const dataStorage = require('../file_io/datastorage.js');
 const ui = require('./table-ui.js');
 const settingsHandler = require('../settings/settings-handler.js');
 const ipcRenderer = require('electron').ipcRenderer;
+const dialog = require('electron').remote.dialog;
+
+function confirmDestructiveLoad() {
+	return confirmDestructiveAction('load', 'Unsaved data will be lost. Are you sure you want to continue?');
+}
+
+function confirmDestructiveSave() {
+	return confirmDestructiveAction('save', 'You are not in sync with the sources files. Are you sure you want to save?');
+}
+
+function confirmDestructiveAction(type, dialogText) {
+	return new Promise((resolve, reject) => {
+		isConfirmationNeeded(type).then((confirmationNeeded) => {
+			if(confirmationNeeded) {
+				dialog.showMessageBox({
+					type: 'question',
+					buttons: ['Yes', 'No'],
+					title: 'Confirm',
+					message: dialogText
+				}, function(response) {
+					if (response === 0) {
+						resolve();
+					} else {
+						reject();
+					}
+				});
+			} else {
+				resolve();
+			}
+		});
+	});
+}
 
 function saveAndRerender() {
-	dataStorage.save();
-	ui.renderData();
+	confirmDestructiveSave()
+	.then(() => {
+		dataStorage.save();
+		ui.renderData();
+	});
 }
 
 function choseDirectoryAndLoadData() {
-	let dialog = require('electron').remote.dialog;
-	let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
-	if (fileNames && fileNames.length) {
-		loadAndRender(fileNames[0])
+	confirmDestructiveLoad()
+	.then(() => {
+		let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
+		if (fileNames && fileNames.length) {
+			loadAndRender(fileNames[0])
 			.then(() => {
 				$('button').prop("disabled", false);
 				settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
 			});
-	};
+		}
+	});
+}
+
+function confirmableLoadAndRender(directory) {
+	confirmDestructiveLoad()
+	.then(() => loadAndRender(directory));
 }
 
 function loadAndRender(directory) {
 	return dataStorage.load(directory)
-		.then(() => ui.renderData());
+	.then(() => ui.renderData());
 }
 
 function createNewRow() {
@@ -59,7 +101,7 @@ function initateControls() {
 
 	let reloadData = function(event) {
 		delayButtonRepeatClick($(this), reloadData, event);
-		loadAndRender();
+		confirmableLoadAndRender();
 	}
 	$('#reloadData').click(reloadData);
 
@@ -88,23 +130,37 @@ function initateControls() {
 	});
 }
 
+function isConfirmationNeeded(type) {
+	return settingsHandler.get().then(settings => {
+		return new Promise((resolve, reject) => {
+			let loadNeeded = settings && !settings.noconfirmDestructiveLoad;
+			if(type == 'load') {
+				loadNeeded &= dataStorage.isDirty();
+			} else {
+				loadNeeded &= !dataStorage.isInSync()
+			}
+			resolve(loadNeeded);
+		});
+	});
+}
+
 ipcRenderer.on('window-command', function(event, message) {
 	switch (message) {
 		case 'open':
-			choseDirectoryAndLoadData();
-			break;
+		choseDirectoryAndLoadData();
+		break;
 		case 'reload':
-			loadAndRender();
-			break;
+		confirmableLoadAndRender();
+		break;
 		case 'save':
-			saveAndRerender();
-			break;
+		saveAndRerender();
+		break;
 		case 'new':
-			createNewRow();
-			break;
+		createNewRow();
+		break;
 		case 'find':
-			focusOnFilter();
-			break;
+		focusOnFilter();
+		break;
 	}
 });
 

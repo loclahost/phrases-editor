@@ -1,11 +1,11 @@
 const fileHandler = require('./filehandler.js');
+const app = require('electron').remote.app;
 
 let directoryPath;
 let phrasesData = (function() {
 	let meta = [];
 	let fileContent = {};
 	let state = 'idle';
-	let dirty = false;
 	let changeListeners = [];
 
 	let addChangeListener = function(listener) {
@@ -45,11 +45,18 @@ let phrasesData = (function() {
 		for (let i = 0; i < changeListeners.length; i++) {
 			changeListeners[i]();
 		}
+		app.showExitPrompt = isDirty();
 	};
 
 	let isDirty = function() {
 		return state == 'dirty';
 	};
+
+	let isInSync = function() {
+		return meta
+			.filter(element => element.notificationId)
+			.length == 0;
+	}
 
 	let getState = function() {
 		return state;
@@ -65,6 +72,7 @@ let phrasesData = (function() {
 		toggleRemoveContentRow: toggleRemoveContentRow,
 		setState: setState,
 		isDirty: isDirty,
+		isInSync: isInSync,
 		getState: getState
 	};
 }());
@@ -106,5 +114,6 @@ module.exports.getPhrasesData = getPhrasesData;
 module.exports.save = save;
 module.exports.load = load;
 module.exports.isDirty = phrasesData.isDirty;
+module.exports.isInSync = phrasesData.isInSync;
 module.exports.getState = phrasesData.getState;
 module.exports.getMetaIndexForLocale = getMetaIndexForLocale;

@@ -132,6 +132,7 @@ function watchDirectory(directory, phrasesData) {
 					.then(data => {
 						if (changedMeta.notificationId) {
 							notificationUI.removeNotification(changedMeta.notificationId);
+							delete changedMeta.notificationId;
 						}
 
 						if (createMD5(data) != originalMD5) {
