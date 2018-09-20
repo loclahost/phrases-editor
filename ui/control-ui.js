@@ -133,7 +133,7 @@ function initateControls() {
 function isConfirmationNeeded(type) {
 	return settingsHandler.get().then(settings => {
 		return new Promise((resolve, reject) => {
-			let loadNeeded = settings && !settings.noconfirmDestructiveLoad;
+			let loadNeeded = settings && !settings.noConfirmDestructiveLoad;
 			if(type == 'load') {
 				loadNeeded &= dataStorage.isDirty();
 			} else {
