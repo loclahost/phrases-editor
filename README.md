@@ -10,6 +10,7 @@ The editor supports settings to control different features, mostly regarding the
 	"highlightMatchedPhrase":false,
 	"customCssPath":"path to custom css file, appended last in head if set",
 	"noConfirmDestructiveLoad":false,
+	"sortType": "natural (AaBb) or ascii (ABab)",
 	"javaGenerator" : {
 		"javaFactory":"enum or class",
 		"translationInterface":"fully qualified name of the translation interface",

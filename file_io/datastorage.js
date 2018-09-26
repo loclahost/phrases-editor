@@ -87,10 +87,12 @@ function getPhrasesData() {
 }
 
 function save() {
-	phrasesData.setState('save');
-	let savedPhrases = fileHandler.saveData(phrasesData, directoryPath);
-	phrasesData.setContent(savedPhrases, phrasesData.getMeta());
-	phrasesData.setState('idle');
+	return settingsHandler.get().then(settings => {
+		phrasesData.setState('save');
+		let savedPhrases = fileHandler.saveData(phrasesData, directoryPath, settings.sortType);
+		phrasesData.setContent(savedPhrases, phrasesData.getMeta());
+		phrasesData.setState('idle');
+	});
 }
 
 function load(directory) {
