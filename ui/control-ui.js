@@ -38,8 +38,8 @@ function confirmDestructiveAction(type, dialogText) {
 function saveAndRerender() {
 	confirmDestructiveSave()
 	.then(() => {
-		dataStorage.save();
-		ui.renderData();
+		return dataStorage.save()
+		.then(() => ui.renderData());
 	});
 }
 

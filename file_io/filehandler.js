@@ -76,15 +76,22 @@ function loadData(directory) {
 		.catch(err => console.error(err));
 }
 
-function saveData(phrases, directory) {
+function saveData(phrases, directory, sortType) {
 	console.log("Saving data");
+
+	let sortFunction;
+	if (sortType == 'ascii') {
+	    sortFunction = (a, b) => (a.content[0] > b.content[0]) - (a.content[0] < b.content[0]);
+	} else {
+	    sortFunction = (a, b) => a.content[0].localeCompare(b.content[0], 'sv');
+	}
 
 	let meta = phrases.getMeta();
 	let content = phrases.getContent();
 	content = content
 		.filter((element) => !element.removed)
 		.filter((element) => !!element.content[0])
-		.sort((a, b) => a.content[0].localeCompare(b.content[0], 'sv'));
+		.sort(sortFunction);
 
 	let fileContent = content.map((element) => element.content);
 
