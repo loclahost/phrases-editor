@@ -76,46 +76,53 @@ function loadData(directory) {
 }
 
 function saveData(phrases, directory, sortType) {
-	console.log("Saving data");
+	return new Promise(resolve => {
+		console.log("Saving data");
 
-	let sortFunction;
-	if (sortType == 'ascii') {
-	    sortFunction = (a, b) => (a.content[0] > b.content[0]) - (a.content[0] < b.content[0]);
-	} else {
-	    sortFunction = (a, b) => a.content[0].localeCompare(b.content[0], 'sv');
-	}
-
-	let meta = phrases.getMeta();
-	let content = phrases.getContent();
-	content = content
-		.filter((element) => !element.removed)
-		.filter((element) => !!element.content[0])
-		.sort(sortFunction);
-
-	let fileContent = content.map((element) => element.content);
-
-	for (let i = 0; i < meta.length; i++) {
-		let newContent = createPhrasesFileContents(fileContent, i + 1);
-		meta[i].md5 = createMD5(newContent);
-		fs.writeFile(meta[i].path, newContent)
-			.then(() => console.log('Done writing ' + meta[i].path));
-	}
-
-	javaFactoryFactory.generateJavaConstants(fileContent, directory);
-
-	function createPhrasesFileContents(content, index) {
-		let fileContentArray = [];
-		for (let i = 0; i < content.length; i++) {
-			let keyMapping = content[i][index];
-			if (keyMapping) {
-				fileContentArray.push(content[i][0] + '~' + keyMapping);
-			}
+		let sortFunction;
+		if (sortType == 'ascii') {
+			sortFunction = (a, b) => (a.content[0] > b.content[0]) - (a.content[0] < b.content[0]);
+		} else {
+			sortFunction = (a, b) => a.content[0].localeCompare(b.content[0], 'sv');
 		}
 
-		return fileContentArray.join('\n');
-	}
+		let meta = phrases.getMeta();
+		let content = phrases.getContent();
+		content = content
+			.filter((element) => !element.removed)
+			.filter((element) => !!element.content[0])
+			.sort(sortFunction);
 
-	return content;
+		let fileContent = content.map((element) => element.content);
+
+		let promises = [];
+		for (let i = 0; i < meta.length; i++) {
+			let newContent = createPhrasesFileContents(fileContent, i + 1);
+			meta[i].md5 = createMD5(newContent);
+			let fileWritePromise = fs.writeFile(meta[i].path, newContent)
+				.then(() => console.log('Done writing ' + meta[i].path));
+			promises.push(fileWritePromise);
+		}
+
+		let javaConstPromise = javaFactoryFactory.generateJavaConstants(fileContent, directory);
+		promises.push(javaConstPromise);
+
+		function createPhrasesFileContents(content, index) {
+			let fileContentArray = [];
+			for (let i = 0; i < content.length; i++) {
+				let keyMapping = content[i][index];
+				if (keyMapping) {
+					fileContentArray.push(content[i][0] + '~' + keyMapping);
+				}
+			}
+
+			return fileContentArray.join('\n');
+		}
+
+		Promise.all(promises).then(() => {
+			resolve(content);
+		});
+	});
 }
 
 function watchDirectory(directory, phrasesData) {

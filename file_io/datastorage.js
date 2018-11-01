@@ -89,9 +89,10 @@ function getPhrasesData() {
 function save() {
 	let settings = settingsHandler.getSettings();
 	phrasesData.setState('save');
-	let savedPhrases = fileHandler.saveData(phrasesData, directoryPath, settings.sortType);
-	phrasesData.setContent(savedPhrases, phrasesData.getMeta());
-	phrasesData.setState('idle');
+	fileHandler.saveData(phrasesData, directoryPath, settings.sortType).then(savedPhrases => {
+		phrasesData.setContent(savedPhrases, phrasesData.getMeta());
+		phrasesData.setState('idle');
+	});
 }
 
 function load(directory) {
