@@ -3,7 +3,6 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs-extra');
 const javaFactoryFactory = require('./java-factory-factory.js');
-const settingsHandler = require('../settings/settings-handler.js');
 const notificationUI = require('../ui/notification-ui.js');
 
 let fileWatch;

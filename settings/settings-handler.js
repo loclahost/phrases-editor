@@ -6,66 +6,46 @@ const ipcRenderer = require('electron').ipcRenderer;
 const shell = require('electron').shell;
 
 const USER_SETTINGS_PATH = path.join(app.getPath('userData'), 'phrases-editor-settings.json');
-const SYSTEM_SETTINGS_PATH = path.join(__dirname, "settings.json");
+
+app.phrasesConfig = {
+
+};
 
 function load(path) {
 	console.log('Reading settings from ' + path);
-	return fs.readJson(path);
+	return fs.readJsonSync(path);
 }
 
-function getSettings() {
-	return new Promise((resolve, reject) => {
-		let settingPromises = [];
-		settingPromises.push(load(SYSTEM_SETTINGS_PATH));
-		settingPromises.push(load(USER_SETTINGS_PATH));
+function loadSettings() {
+	app.phrasesConfig = {
+		userSettings: {},
+		projectSettings: {},
+		settings: {}
+	};
 
-		Promise.all(settingPromises).then(values => {
-			let mergedSettings = {};
-			for (let i = 0; i < values.length; i++) {
-				mergedSettings = extend(mergedSettings, values[i]);
+	if (fs.existsSync(USER_SETTINGS_PATH)) {
+		let userSettings = load(USER_SETTINGS_PATH);
+		app.phrasesConfig.userSettings = userSettings;
+		if (userSettings.lastOpenDirectory) {
+			let projectSettingsPath = path.join(userSettings.lastOpenDirectory, 'phrases-editor-settings.json');
+			if (fs.existsSync(projectSettingsPath)) {
+				app.phrasesConfig.projectSettings = load(projectSettingsPath);
 			}
-			console.log(mergedSettings);
-			resolve(mergedSettings);
-		}).catch(err => {
-			reject(err);
-		});
-	});
-}
-
-function updateSettings(newSettings, path) {
-	load(path)
-		.then(oldSettings => extend(oldSettings, newSettings))
-		.then(mergedSettings => fs.writeFile(path, JSON.stringify(mergedSettings)))
-		.catch(err => console.log(err));
-
-	global[SETTINGS_KEY] = new Promise((resolve, reject) => resolve(extend(global[SETTINGS_KEY], newSettings)));
-}
-
-///////////////////////////// Settings singleton //////////////////////////////
-const SETTINGS_KEY = Symbol.for("phrases-editor.settings");
-
-
-var globalSymbols = Object.getOwnPropertySymbols(global);
-var hasSettings = (globalSymbols.indexOf(SETTINGS_KEY) > -1);
-
-
-if (!hasSettings) {
-	global[SETTINGS_KEY] = getSettings();
-}
-
-var singleton = {
-	get: function() {
-		return global[SETTINGS_KEY];
-	},
-	update: function(settings, type) {
-		if (type == 'user') {
-			updateSettings(settings, USER_SETTINGS_PATH);
-		} else {
-			updateSettings(settings, SYSTEM_SETTINGS_PATH);
 		}
-	}
-};
 
+		app.phrasesConfig.settings = extend({}, app.phrasesConfig.userSettings, app.phrasesConfig.projectSettings);
+	}
+
+}
+
+function updateSettings(newSettings) {
+	fs.writeJSONSync(USER_SETTINGS_PATH, extend({}, app.phrasesConfig.userSettings, newSettings));
+	loadSettings();
+}
+
+if (!app.phrasesConfig.settings) {
+	loadSettings();
+}
 
 ipcRenderer.on('window-command', function(event, message) {
 	if (message == 'open_settings') {
@@ -73,4 +53,8 @@ ipcRenderer.on('window-command', function(event, message) {
 	}
 });
 
-module.exports = singleton;
+module.exports = {
+	getSettings: () => app.phrasesConfig.settings,
+	updateSettings: updateSettings,
+	reloadSettings: loadSettings
+};

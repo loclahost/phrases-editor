@@ -8,11 +8,12 @@ const settingsHandler = require('../settings/settings-handler.js');
 function renderData() {
 	$('#renderArea').empty().append(createContexts());
 	let content = $('.content').click(function() { transformToForm($(this)) });
-	settingsHandler.get().then(settings => {
-		if (settings.highlightMatchedPhrase) {
-			content.mouseenter(highlightMatch).mouseleave(dropHighlights);
-		}
-	});
+
+	let settings = settingsHandler.getSettings();
+	if (settings.highlightMatchedPhrase) {
+		content.mouseenter(highlightMatch).mouseleave(dropHighlights);
+	}
+
 	filterForSearch();
 }
 
@@ -113,20 +114,18 @@ function transformToForm(clickedTr) {
 		removed: phrasesArray[index].removed
 	}));
 
-	settingsHandler.get().then(settings => {
-		var keyGeneratorSettings = settings.keyGenerator;
-		if (!keyGeneratorSettings) {
-			$('input.locale-index--1', clickedTr).focus();
-			return;
-		}
-
+	let settings = settingsHandler.getSettings();
+	var keyGeneratorSettings = settings.keyGenerator;
+	if (!keyGeneratorSettings) {
+		$('input.locale-index--1', clickedTr).focus();
+	} else {
 		$('input.locale-index-' + dataStorage.getMetaIndexForLocale(keyGeneratorSettings.sourceLocale), clickedTr)
 			.focus()
 			.on('input', function() {
 				let input = $(this);
 				$('input', clickedTr).first().val(keyGeneratorSettings.namespace + "~" + input.val());
 			});
-	});
+	}
 
 	$('.cancel-button', clickedTr).click(function(event) {
 		event.stopPropagation();
@@ -207,11 +206,10 @@ function addRow() {
 	newTr.click(function() {
 		transformToForm($(this));
 	});
-	settingsHandler.get().then(settings => {
-		if (settings.highlightMatchedPhrase) {
-			newTr.mouseenter(highlightMatch).mouseleave(dropHighlights);
-		}
-	});
+	let settings = settingsHandler.getSettings();
+	if (settings.highlightMatchedPhrase) {
+		newTr.mouseenter(highlightMatch).mouseleave(dropHighlights);
+	}
 
 	newTr.click();
 

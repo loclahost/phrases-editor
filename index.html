@@ -31,17 +31,17 @@
 		</nav>
 	</body>
 	<script>
-	window.$ = window.jQuery = require('./jquery-3.2.1.min.js');
-	const ui = require('./ui/table-ui.js');
-	const controlUI = require('./ui/control-ui.js');
-	const dataStorage = require('./file_io/datastorage.js');
-	const settingsHandler = require('./settings/settings-handler.js');
+		window.$ = window.jQuery = require('./jquery-3.2.1.min.js');
+		const ui = require('./ui/table-ui.js');
+		const controlUI = require('./ui/control-ui.js');
+		const dataStorage = require('./file_io/datastorage.js');
+		const settingsHandler = require('./settings/settings-handler.js');
 
-	dataStorage.getPhrasesData().addChangeListener(() => {
-		ui.updateTitle();
-	});
+		dataStorage.getPhrasesData().addChangeListener(() => {
+			ui.updateTitle();
+		});
 
-	settingsHandler.get().then(settings => {
+		let settings = settingsHandler.getSettings();
 		if (settings.lastOpenDirectory) {
 			controlUI.loadDirectory(settings.lastOpenDirectory);
 		}
@@ -54,9 +54,10 @@
 			styles.href = settings.customCssPath;
 			document.getElementsByTagName('head')[0].appendChild(styles);
 		}
-	});
 
-	controlUI.initateControls();
+
+		controlUI.initateControls();
+
 	</script>
 
 </html>

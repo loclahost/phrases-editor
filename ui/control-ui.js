@@ -15,7 +15,7 @@ function confirmDestructiveSave() {
 function confirmDestructiveAction(type, dialogText) {
 	return new Promise((resolve, reject) => {
 		isConfirmationNeeded(type).then((confirmationNeeded) => {
-			if(confirmationNeeded) {
+			if (confirmationNeeded) {
 				dialog.showMessageBox({
 					type: 'question',
 					buttons: ['Yes', 'No'],
@@ -37,34 +37,34 @@ function confirmDestructiveAction(type, dialogText) {
 
 function saveAndRerender() {
 	confirmDestructiveSave()
-	.then(() => {
-		return dataStorage.save()
-		.then(() => ui.renderData());
-	});
+		.then(() => {
+			dataStorage.save();
+			ui.renderData();
+		});
 }
 
 function choseDirectoryAndLoadData() {
 	confirmDestructiveLoad()
-	.then(() => {
-		let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
-		if (fileNames && fileNames.length) {
-			loadAndRender(fileNames[0])
-			.then(() => {
-				$('button').prop("disabled", false);
-				settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
-			});
-		}
-	});
+		.then(() => {
+			let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
+			if (fileNames && fileNames.length) {
+				loadAndRender(fileNames[0])
+					.then(() => {
+						$('button').prop("disabled", false);
+						settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
+					});
+			}
+		});
 }
 
 function confirmableLoadAndRender(directory) {
 	confirmDestructiveLoad()
-	.then(() => loadAndRender(directory));
+		.then(() => loadAndRender(directory));
 }
 
 function loadAndRender(directory) {
 	return dataStorage.load(directory)
-	.then(() => ui.renderData());
+		.then(() => ui.renderData());
 }
 
 function createNewRow() {
@@ -111,56 +111,56 @@ function initateControls() {
 	};
 	$('#createNew').click(createNew);
 
-	settingsHandler.get().then(settings => {
-		let searchTimerId;
-		$('input.search').keydown(function(event) {
-			if (event.keyCode == 13) {
-				if (settings.filterOnEnter) {
-					ui.filterForSearch();
-				}
-				return false;
+	let settings = settingsHandler.getSettings();
+	let searchTimerId;
+	$('input.search').keydown(function(event) {
+		if (event.keyCode == 13) {
+			if (settings.filterOnEnter) {
+				ui.filterForSearch();
 			}
-		});
-		if (!settings.filterOnEnter) {
-			$('input.search').keyup(function() {
-				clearTimeout(searchTimerId);
-				searchTimerId = window.setTimeout(ui.filterForSearch, 300);
-			});
+			return false;
 		}
 	});
+	if (!settings.filterOnEnter) {
+		$('input.search').keyup(function() {
+			clearTimeout(searchTimerId);
+			searchTimerId = window.setTimeout(ui.filterForSearch, 300);
+		});
+	}
+
 }
 
 function isConfirmationNeeded(type) {
-	return settingsHandler.get().then(settings => {
-		return new Promise((resolve, reject) => {
-			let loadNeeded = settings && !settings.noConfirmDestructiveLoad;
-			if(type == 'load') {
-				loadNeeded &= dataStorage.isDirty();
-			} else {
-				loadNeeded &= !dataStorage.isInSync()
-			}
-			resolve(loadNeeded);
-		});
+	let settings = settingsHandler.getSettings();
+	return new Promise((resolve, reject) => {
+		let loadNeeded = settings && !settings.noConfirmDestructiveLoad;
+		if (type == 'load') {
+			loadNeeded &= dataStorage.isDirty();
+		} else {
+			loadNeeded &= !dataStorage.isInSync()
+		}
+		resolve(loadNeeded);
 	});
+
 }
 
 ipcRenderer.on('window-command', function(event, message) {
 	switch (message) {
 		case 'open':
-		choseDirectoryAndLoadData();
-		break;
+			choseDirectoryAndLoadData();
+			break;
 		case 'reload':
-		confirmableLoadAndRender();
-		break;
+			confirmableLoadAndRender();
+			break;
 		case 'save':
-		saveAndRerender();
-		break;
+			saveAndRerender();
+			break;
 		case 'new':
-		createNewRow();
-		break;
+			createNewRow();
+			break;
 		case 'find':
-		focusOnFilter();
-		break;
+			focusOnFilter();
+			break;
 	}
 });
 
