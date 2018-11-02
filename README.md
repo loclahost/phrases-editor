@@ -31,19 +31,25 @@ Note of the javaFactory setting: This is due to the method-may-not-be-larger-tha
 
 ## Release notes
 
+### 2.2.0
+* Feature: Added sortType to set if the files should be sorted in natural (deafult) or ascii order. Thanks to @Caresilabs
+* Feature: Added to ability to have a configuration file in the same folder as the phrases files for those projects where you want a different configuration than you default one
+* Feature: The java file generation now ignores duplicate keys. The first one is included in the file, following ones are not but logged to console.out
+
 ### 2.1.0
-* Added confirmation of destructive actions, like reloading the files while having unsaved edits or saving while the data loaded is not in sync with the disc. If you do not want confirmations set **noConfirmDestructiveLoad** to true
+* Feature: Added confirmation of destructive actions, like reloading the files while having unsaved edits or saving while the data loaded is not in sync with the disc. If you do not want confirmations set **noConfirmDestructiveLoad** to true
 * Bumped Electron to the 3.x.x branch
 
 ### 2.0.1
-* Fix missing focus when editing a phrase
-* The application is now strict when parsing the json settings file
+* Fix: Missing focus when editing a phrase
+* Fix: The application is now strict when parsing the json settings file
 
 ### 2.0.0
 * Feature: Autogenerate key from selected locale using a fixed namespace. Check the **keyGenerator** settings
 * Removed: Surprises are now dropped. It was a silly idea.
 * Feature: Version number is now displayed in the menu list under Misc. Developer tools has also moved here from Application
 * **Breaking change**: Rearranged and grouped the settings. Please consult the list above to see what changes you need to do.
+
 ### 1.6.4
-* Minor bugfix for java class generator factory
+* Fix: Java class generator factory
 * Fix/featurett: Now allows saving untouched data for easy regeneration of files on disk
