@@ -40,9 +40,18 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 
 	function createInitFunctions(keys) {
 		let initFunctionMap = {};
+		let duplicatesMap = {};
 		keys
 			.map(key => {
 				return { constantName: javaUtil.createValidEnumName(key), constantKey: key.replace(/"/g, '\\"') };
+			})
+			.filter(constantObject => {
+				if(duplicatesMap[constantObject.constantName]) {
+					console.log('Ignoring ' + constantObject.constantName + "(" + constantObject.constantKey + "); it is a duplicate");
+					return false;
+				}
+				duplicatesMap[constantObject.constantName] = true;
+				return true;
 			})
 			.forEach((value, index) => {
 				let functionName = "init" + Math.floor(index / 500);

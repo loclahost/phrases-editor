@@ -6,6 +6,7 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 		let content = 'package ' + javaUtil.guessPackageName(currentPath, settings) + ';\n\npublic class Translation {\n';
 		let currentNamespace = '';
 		let currentKeys = [];
+		let duplicatesMap = {};
 		for (let i = 0; i < phrasesArray.length; i++) {
 			let phraseKey = phrasesArray[i][0].split('~');
 			if (phraseKey[0] != currentNamespace) {
@@ -16,9 +17,16 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 				currentNamespace = phraseKey[0];
 				content += createEnumStart(currentNamespace);
 				currentKeys = [];
+				duplicatesMap = {};
 			}
-
-			currentKeys.push(createEnumConstant(phraseKey[1]));
+			let constantName = javaUtil.createValidEnumName(phraseKey[1]);
+			let enumInstanceDeclaration = createEnumConstant(phraseKey[1]);
+			if(duplicatesMap[constantName]) {
+				console.log('Ignoring ' + enumInstanceDeclaration + "; it is a duplicate");
+			} else {
+				currentKeys.push(createEnumConstant(phraseKey[1]));
+				duplicatesMap[constantName] = true;
+			}
 		}
 		if (currentNamespace != '') {
 			content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n\n';
