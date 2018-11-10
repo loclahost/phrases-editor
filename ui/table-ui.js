@@ -119,12 +119,15 @@ function transformToForm(clickedTr) {
 	if (!keyGeneratorSettings) {
 		$('input.locale-index--1', clickedTr).focus();
 	} else {
-		$('input.locale-index-' + dataStorage.getMetaIndexForLocale(keyGeneratorSettings.sourceLocale), clickedTr)
-			.focus()
-			.on('input', function() {
-				let input = $(this);
-				$('input', clickedTr).first().val(keyGeneratorSettings.namespace + "~" + input.val());
-			});
+		let metaIndex = dataStorage.getMetaIndexForLocale(keyGeneratorSettings.sourceLocale);
+		if (metaIndex >= 0) {
+			$('input.locale-index-' + metaIndex, clickedTr)
+				.focus()
+				.on('input', function() {
+					let input = $(this);
+					$('input', clickedTr).first().val(keyGeneratorSettings.namespace + "~" + input.val());
+				});
+		}
 	}
 
 	$('.cancel-button', clickedTr).click(function(event) {
