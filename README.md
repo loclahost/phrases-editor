@@ -1,7 +1,7 @@
 # phrases-editor
 Editor for phrase files
 
-The editor supports settings to control different features, mostly regarding the enum creation. The settings are
+The editor supports settings to control different features. The settings are
 
 ```json
 {
@@ -29,9 +29,12 @@ The user settings ends up in a file called **phrases-editor-settings.json** in y
 
 Note of the javaFactory setting: This is due to the method-may-not-be-larger-than-64KB feature of java. If you get a "Code too large" compile error in the translation file you might want to use "class".
 
-Note on project settings: Project settings must reside in the same folder as the phrases files and will be detected automaticly on load. Settings in the project files will override settings on the top level of the user settings. This means that there are no merging of subobjects, so any settings using an object must be overrided in its entirety. This is scheduled to change in the 3.0.0 release, so that you only need to override the settings you want to change. 
+Note on project settings: Project settings must reside in the same folder as the phrases files and will be detected automaticly on load. Settings in the project files will override settings on the top level of the user settings. This means that there are no merging of subobjects, so any settings using an object must be overridden in its entirety. This is scheduled to change in the 3.0.0 release, so that you only need to override the settings you want to change.
 
 ## Release notes
+
+### 2.2.1
+* Fix: Use the correct method to update the settings when opening a new directory
 
 ### 2.2.0
 * Feature: Added sortType to set if the files should be sorted in natural (deafult) or ascii order. Thanks to @Caresilabs
