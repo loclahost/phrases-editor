@@ -51,7 +51,7 @@ function choseDirectoryAndLoadData() {
 				loadAndRender(fileNames[0])
 					.then(() => {
 						$('button').prop("disabled", false);
-						settingsHandler.update({ lastOpenDirectory: fileNames[0] }, 'user');
+						settingsHandler.updateSettings({ lastOpenDirectory: fileNames[0] }, 'user');
 					});
 			}
 		});
