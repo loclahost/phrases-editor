@@ -33,6 +33,9 @@ Note on project settings: Project settings must reside in the same folder as the
 
 ## Release notes
 
+### 2.2.2
+* Fix: Do not display that all is saved until it is actually saved. Thanks to @ericot
+
 ### 2.2.1
 * Fix: Use the correct method to update the settings when opening a new directory
 
