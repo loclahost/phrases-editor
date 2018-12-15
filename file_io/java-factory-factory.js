@@ -11,8 +11,6 @@ const factories = {
 const defaultFactory = 'enum';
 
 function generateJavaConstants(fileContent, directory) {
-
-
 	let settings = settingsHandler.getSettings();
 	var javaGeneratorSettings = settings.javaGenerator;
 	if (!javaGeneratorSettings) {
@@ -20,10 +18,8 @@ function generateJavaConstants(fileContent, directory) {
 	}
 	let factory = javaGeneratorSettings.javaFactory || defaultFactory;
 	console.log("Using java factory '" + factory + "'.");
-	factories[factory].createJavaContent(fileContent, directory, javaGeneratorSettings)
+	return factories[factory].createJavaContent(fileContent, directory, javaGeneratorSettings)
 		.then(content => fs.writeFile(path.resolve(directory, 'Translation.java'), content))
 		.then(() => console.log('Done writing java translations'));
-
-
 }
 module.exports.generateJavaConstants = generateJavaConstants;
