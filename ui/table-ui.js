@@ -29,7 +29,7 @@ function filterContext(context) {
 	let searchValue = $('input.search').val();
 	if (searchValue && searchValue.length > 1) {
 		let searchRegExp = new RegExp(searchValue, 'i');
-		context.each(function() {
+		context.not('.is-form').each(function() {
 			let row = $(this);
 			row.toggle(searchRegExp.test(row.text()));
 		});
