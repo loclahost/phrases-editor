@@ -170,6 +170,12 @@
     font-weight: bolder;
 }
 
+.loading-indicator {
+    margin-top: 150px;
+    color: lightgray;
+    text-align: center;
+}
+
 body {
     padding-bottom: 70px;
 }

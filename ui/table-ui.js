@@ -5,6 +5,10 @@ const javaUtil = require('../file_io/java-util.js');
 const clipboard = require('electron').remote.clipboard;
 const settingsHandler = require('../settings/settings-handler.js');
 
+function renderLoading() {
+	$('#renderArea').empty().html('<div class="loading-indicator"><h3>Loading...</h3></div>');
+}
+
 function renderData() {
 	$('#renderArea').empty().append(createContexts());
 	let content = $('.content').click(function() { transformToForm($(this)) });
@@ -283,6 +287,7 @@ function dropHighlights() {
 	});
 }
 
+module.exports.renderLoading = renderLoading;
 module.exports.renderData = renderData;
 module.exports.updateTitle = updateTitle;
 module.exports.addRow = addRow;

@@ -63,6 +63,7 @@ function confirmableLoadAndRender(directory) {
 }
 
 function loadAndRender(directory) {
+	ui.renderLoading();
 	return dataStorage.load(directory)
 		.then(() => ui.renderData());
 }
