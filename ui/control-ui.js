@@ -123,7 +123,7 @@ function initateControls() {
 		}
 	});
 	if (!settings.filterOnEnter) {
-		$('input.search').keyup(function() {
+		$('input.search').on('input', function() {
 			clearTimeout(searchTimerId);
 			searchTimerId = window.setTimeout(ui.filterForSearch, 300);
 		});
