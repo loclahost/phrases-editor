@@ -1,7 +1,7 @@
 {
 	"name": "phrases-editor",
 	"productName": "phrases-editor",
-	"version": "2.2.2",
+	"version": "2.2.3",
 	"description": "Phrases editor for Netset phrases files",
 	"main": "main.js",
 	"scripts": {
