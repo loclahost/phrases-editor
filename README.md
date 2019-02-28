@@ -33,6 +33,12 @@ Note on project settings: Project settings must reside in the same folder as the
 
 ## Release notes
 
+### 2.2.3
+* Fix: Added loading text when loading phrases data so it is easier to see that something happens
+* Updated libraries
+* Fix: Always recognize input in search box
+* Fix: Exclude rows in edit mode while searching
+    
 ### 2.2.2
 * Fix: Do not display that all is saved until it is actually saved. Thanks to @ericot
 
