@@ -33,6 +33,10 @@ Note on project settings: Project settings must reside in the same folder as the
 
 ## Release notes
 
+### 2.2.4
+* Fix: Sort initializers according to the two first letters in the key to avoid merge conflicts in the generated file
+* Fix: Wait for data to be saved before rerendering/reloading the GUI. This solves some strange search related bugs where new translations could no longer be found after save.
+
 ### 2.2.3
 * Fix: Added loading text when loading phrases data so it is easier to see that something happens
 * Updated libraries
