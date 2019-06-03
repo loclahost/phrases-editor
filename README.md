@@ -34,7 +34,7 @@ Note on project settings: Project settings must reside in the same folder as the
 ## Release notes
 
 ### 2.2.4
-* Fix: Sort initializers according to the two first letters in the key to avoid merge conflicts in the generated file
+* Fix: Sort initializers according to the two first letters in the key to avoid merge conflicts in the generated file. This changes the internal format of the generated file so make sure your entire team bumps to this version at the same time.
 * Fix: Wait for data to be saved before rerendering/reloading the GUI. This solves some strange search related bugs where new translations could no longer be found after save.
 
 ### 2.2.3
