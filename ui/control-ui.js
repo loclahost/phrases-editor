@@ -37,10 +37,8 @@ function confirmDestructiveAction(type, dialogText) {
 
 function saveAndRerender() {
 	confirmDestructiveSave()
-		.then(() => {
-			dataStorage.save();
-			ui.renderData();
-		});
+		.then(() => dataStorage.save())
+		.then(() => ui.renderData());
 }
 
 function choseDirectoryAndLoadData() {
