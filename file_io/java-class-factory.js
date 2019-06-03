@@ -54,7 +54,11 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 				return true;
 			})
 			.forEach((value, index) => {
-				let functionName = "init" + Math.floor(index / 500);
+				let functionIdentifier = value.constantName;
+				if(functionIdentifier.length > 2) {
+					functionIdentifier = functionIdentifier.slice(0,2);
+				}
+				let functionName = "init" + functionIdentifier;
 				if (!initFunctionMap[functionName]) {
 					initFunctionMap[functionName] = { functionName: functionName, phraseConstants: [] };
 				}
