@@ -16,7 +16,8 @@ The editor supports settings to control different features. The settings are
 		"translationInterface":"fully qualified name of the translation interface",
 		"localeInterface":"fully qualified name of your locale",
 		"localeService":"fully qualified way to get your localeservice",
-		"srcRoots":["list of folders which might be a source root of your project","usually something like src"]
+		"srcRoots":["list of folders which might be a source root of your project","usually something like src"],
+		"generatedClassPath":"path on disk for where to put the generated Translation.java"
 	},
 	"keyGenerator" : {
 		"namespace" : "The namespace for all translations",
@@ -32,6 +33,10 @@ Note of the javaFactory setting: This is due to the method-may-not-be-larger-tha
 Note on project settings: Project settings must reside in the same folder as the phrases files and will be detected automaticly on load. Settings in the project files will override settings on the top level of the user settings. This means that there are no merging of subobjects, so any settings using an object must be overridden in its entirety. This is scheduled to change in the 3.0.0 release, so that you only need to override the settings you want to change.
 
 ## Release notes
+
+### 2.3.0
+* Feature: Added possibility to specify an absolute path to where the generated translation constant file should be written. Setting is javaGeneratorSettings.generatedClassPath, make sure the path exists as it will not be created automatically. Also update your srcRoots accordingly to get a correct package name in the genereated file.
+* Updated libraries
 
 ### 2.2.4
 * Fix: Sort initializers according to the two first letters in the key to avoid merge conflicts in the generated file. This changes the internal format of the generated file so make sure your entire team bumps to this version at the same time.
