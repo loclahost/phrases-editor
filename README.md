@@ -22,7 +22,17 @@ The editor supports settings to control different features. The settings are
 	"keyGenerator" : {
 		"namespace" : "The namespace for all translations",
 		"sourceLocale" : "which locale (file name) to use as source for keys"
-	}
+	},
+    "phrasesDuplication": [
+        {
+            "sourceLocale":"en_US.phrases",
+            "targetLocales":["fi_FI.phrases"]
+        },
+        {
+            "sourceLocale":"sv_SE.phrases",
+            "targetLocales":["da_DK.phrases", "no_NO.phrases"]
+        }
+    ]
 }
 ```
 

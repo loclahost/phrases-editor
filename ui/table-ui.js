@@ -11,7 +11,7 @@ function renderLoading() {
 
 function renderData() {
 	$('#renderArea').empty().append(createContexts());
-	let content = $('.content').click(function() { transformToForm($(this)) });
+	let content = $('.content').click(function () { transformToForm($(this)) });
 
 	let settings = settingsHandler.getSettings();
 	if (settings.highlightMatchedPhrase) {
@@ -29,7 +29,7 @@ function filterContext(context) {
 	let searchValue = $('input.search').val();
 	if (searchValue && searchValue.length > 1) {
 		let searchRegExp = new RegExp(searchValue, 'i');
-		context.not('.is-form').each(function() {
+		context.not('.is-form').each(function () {
 			let row = $(this);
 			row.toggle(searchRegExp.test(row.text()));
 		});
@@ -119,7 +119,7 @@ function transformToForm(clickedTr) {
 	}));
 
 	let settings = settingsHandler.getSettings();
-	var keyGeneratorSettings = settings.keyGenerator;
+	let keyGeneratorSettings = settings.keyGenerator;
 	if (!keyGeneratorSettings) {
 		$('input.locale-index--1', clickedTr).focus();
 	} else {
@@ -127,19 +127,43 @@ function transformToForm(clickedTr) {
 		if (metaIndex >= 0) {
 			$('input.locale-index-' + metaIndex, clickedTr)
 				.focus()
-				.on('input', function() {
+				.on('input', function () {
 					let input = $(this);
 					$('input', clickedTr).first().val(keyGeneratorSettings.namespace + "~" + input.val());
 				});
 		}
 	}
 
-	$('.cancel-button', clickedTr).click(function(event) {
+	let phrasesDuplicateSettings = settings.phrasesDuplication;
+	if (phrasesDuplicateSettings) {
+		phrasesDuplicateSettings.forEach(element => {
+			let metaIndexSource = dataStorage.getMetaIndexForLocale(element.sourceLocale);
+			if (metaIndexSource >= 0) {
+				$('input.locale-index-' + metaIndexSource, clickedTr)
+					.on('input', function () {
+						let inputValue = $(this).val();
+						element.targetLocales.forEach(targetLocale => {
+							let metaIndexTarget = dataStorage.getMetaIndexForLocale(targetLocale);
+							$('input.locale-index-' + metaIndexTarget, clickedTr).val(inputValue);
+						});
+
+					});
+			}
+		});
+		[].concat(...phrasesDuplicateSettings
+			.map(element => element.targetLocales))
+			.forEach(targetLocale => {
+				let metaIndexTarget = dataStorage.getMetaIndexForLocale(targetLocale);
+				$('input.locale-index-' + metaIndexTarget, clickedTr).prop("disabled", true);
+			});
+	}
+
+	$('.cancel-button', clickedTr).click(function (event) {
 		event.stopPropagation();
 		transformToView(clickedTr);
 	});
 
-	$('.ok-button', clickedTr).click(function(event) {
+	$('.ok-button', clickedTr).click(function (event) {
 		event.stopPropagation();
 		try {
 			let newPhrases = collectText(clickedTr);
@@ -152,28 +176,28 @@ function transformToForm(clickedTr) {
 		}
 	});
 
-	$('.copy-button', clickedTr).click(function(event) {
+	$('.copy-button', clickedTr).click(function (event) {
 		event.stopPropagation();
 		let newPhrases = collectText(clickedTr);
 		let stringRepresentation = JSON.stringify(newPhrases);
 		clipboard.writeText(stringRepresentation);
 	});
 
-	$('.paste-button', clickedTr).click(function(event) {
+	$('.paste-button', clickedTr).click(function (event) {
 		event.stopPropagation();
 		let clipboardArray = JSON.parse(clipboard.readText());
 		if (!Array.isArray(clipboardArray) || clipboardArray.length != meta.length + 1) {
 			return;
 		}
 
-		$('input', clickedTr).each(function(notUsed, element) {
+		$('input', clickedTr).each(function (notUsed, element) {
 			let inputElement = $(element);
 			let metaIndex = inputElement.data('meta');
 			inputElement.val(clipboardArray[metaIndex + 1])
 		});
 	});
 
-	$('.remove-button', clickedTr).click(function(event) {
+	$('.remove-button', clickedTr).click(function (event) {
 		event.stopPropagation();
 		phrases.toggleRemoveContentRow(index);
 		phrases.setState('dirty');
@@ -210,7 +234,7 @@ function addRow() {
 		'view-content': templateLoader.getUITemplate('row-view-content')
 	}));
 	newTr.appendTo($('#renderArea table'));
-	newTr.click(function() {
+	newTr.click(function () {
 		transformToForm($(this));
 	});
 	let settings = settingsHandler.getSettings();
@@ -227,7 +251,7 @@ function addRow() {
 
 function collectText(someFormTr) {
 	let newPhrases = [];
-	$('input', someFormTr).each(function(notUsed, element) {
+	$('input', someFormTr).each(function (notUsed, element) {
 		let inputElement = $(element);
 		let metaIndex = inputElement.data('meta');
 		newPhrases[metaIndex + 1] = inputElement.val()
@@ -264,9 +288,9 @@ function highlightMatch() {
 	if (searchValue && searchValue.length > 1) {
 		let searchRegExp = new RegExp('(' + searchValue + ')', 'ig');
 
-		context.each(function() {
+		context.each(function () {
 			let row = $(this);
-			$('.column span', row).each(function() {
+			$('.column span', row).each(function () {
 				let span = $(this);
 				if (searchRegExp.test(span.text())) {
 					span.html(span.text().replace(searchRegExp, '<span class="matching-text">$1</span>'));
@@ -279,7 +303,7 @@ function highlightMatch() {
 function dropHighlights() {
 	let removeHighlightRegExp = new RegExp('<span class="matching-text">(.+?)<\/span>', 'ig');
 	let context = $(this);
-	$('.column span', context).each(function() {
+	$('.column span', context).each(function () {
 		let span = $(this);
 		if ($('.matching-text', span).length > 0) {
 			span.text(span.html().replace(removeHighlightRegExp, '$1'));
