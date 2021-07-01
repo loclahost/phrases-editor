@@ -11,8 +11,9 @@ function createNewWindow() {
 		height: 600,
 		webPreferences: {
 			nodeIntegration: true,
-			enableRemoteModule: true
-		}
+			contextIsolation: false,
+			enableRemoteModule: true,
+		},
 	});
 	mainWindow.loadURL('file://' + __dirname + '/index.html');
 
