@@ -1,25 +1,25 @@
-	public static class {{{ namespace }}} {
+public static class {{{ namespace }}} {
 
+	{{# initFunctions }}
+	{{# phraseConstants }}
+	public static TranslatableConstant {{{ constantName }}} = null;
+	{{/ phraseConstants }}
+	{{/ initFunctions }}
+
+	static {
 		{{# initFunctions }}
-		{{# phraseConstants }}
-		public static TranslatableConstant {{{ constantName }}} = null;
-		{{/ phraseConstants }}
+		{{{ functionName }}}();
 		{{/ initFunctions }}
-
-		static {
-			{{# initFunctions }}
-			{{{ functionName }}}();
-			{{/ initFunctions }}
-		}
-
-		{{# initFunctions }}
-		private static void {{{ functionName }}}() {
-			{{# phraseConstants }}
-			{{{ namespace }}}.{{{ constantName }}} = new TranslatableConstant("{{{ constantName }}}", "{{{ namespace }}}", "{{{ constantKey }}}");
-			{{/ phraseConstants }}
-		}
-		{{/ initFunctions }}
-
-		private {{{ namespace }}}() {}
 	}
+
+	{{# initFunctions }}
+	private static void {{{ functionName }}}() {
+		{{# phraseConstants }}
+		{{{ namespace }}}.{{{ constantName }}} = new TranslatableConstant("{{{ constantName }}}", "{{{ namespace }}}", "{{{ constantKey }}}");
+		{{/ phraseConstants }}
+	}
+	{{/ initFunctions }}
+
+	private {{{ namespace }}}() {}
+}
 

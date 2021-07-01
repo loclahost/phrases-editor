@@ -45,6 +45,10 @@ Note on project settings: Project settings must reside in the same folder as the
 
 ## Release notes
 
+### 2.4.1
+
+- Fix: Remove the extra indentation in the generated java file
+
 ### 2.4.0
 
 - Feature: It is now possible to add automatic duplication of phrases, see "phrasesDuplication" in the setting file section.
