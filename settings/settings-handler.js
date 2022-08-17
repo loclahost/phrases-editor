@@ -1,4 +1,4 @@
-const app = require('electron').remote.app;
+const app = require('@electron/remote').app;
 const fs = require('fs-extra');
 const path = require('path');
 const extend = require('extend');
@@ -47,7 +47,7 @@ if (!app.phrasesConfig.settings) {
 	loadSettings();
 }
 
-ipcRenderer.on('window-command', function(event, message) {
+ipcRenderer.on('window-command', function (event, message) {
 	if (message == 'open_settings') {
 		shell.openItem(USER_SETTINGS_PATH);
 	}

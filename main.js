@@ -1,4 +1,5 @@
 const electron = require('electron');
+const electronRemote = require("@electron/remote/main")
 const app = electron.app;
 const dialog = electron.dialog;
 const BrowserWindow = electron.BrowserWindow;
@@ -15,6 +16,10 @@ function createNewWindow() {
 			enableRemoteModule: true,
 		},
 	});
+
+	electronRemote.initialize();
+	electronRemote.enable(mainWindow.webContents);
+
 	mainWindow.loadURL('file://' + __dirname + '/index.html');
 
 	mainWindow.on('close', (e) => {

@@ -12,13 +12,14 @@
 	"author": "Staffan Runnsjö",
 	"license": "MIT",
 	"dependencies": {
+		"@electron/remote": "^2.0.8",
 		"extend": "^3.0.2",
-		"fs-extra": "^10.0.0",
+		"fs-extra": "^10.1.0",
 		"mustache": "^4.2.0",
-		"node-watch": "^0.7.1",
+		"node-watch": "^0.7.3",
 		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
-		"electron": "^13.6.6"
+		"electron": "^20.0.2"
 	}
 }

@@ -2,7 +2,7 @@ const dataStorage = require('../file_io/datastorage.js');
 const ui = require('./table-ui.js');
 const settingsHandler = require('../settings/settings-handler.js');
 const ipcRenderer = require('electron').ipcRenderer;
-const dialog = require('electron').remote.dialog;
+const dialog = require('@electron/remote').dialog;
 
 function confirmDestructiveLoad() {
 	return confirmDestructiveAction('load', 'Unsaved data will be lost. Are you sure you want to continue?');
@@ -21,7 +21,7 @@ function confirmDestructiveAction(type, dialogText) {
 					buttons: ['Yes', 'No'],
 					title: 'Confirm',
 					message: dialogText
-				}, function(response) {
+				}, function (response) {
 					if (response === 0) {
 						resolve();
 					} else {
@@ -78,7 +78,7 @@ function delayButtonRepeatClick(button, clickFunction, event) {
 	let disabledState = button.prop('disabled');
 	button.prop('disabled', 'disabled');
 	button.off('click');
-	window.setTimeout(function() {
+	window.setTimeout(function () {
 		button.click(clickFunction);
 		button.prop('disabled', disabledState);
 	}, 1000);
@@ -86,25 +86,25 @@ function delayButtonRepeatClick(button, clickFunction, event) {
 }
 
 function initateControls() {
-	let loadData = function(event) {
+	let loadData = function (event) {
 		delayButtonRepeatClick($(this), loadData, event);
 		choseDirectoryAndLoadData();
 	};
 	$('#loadData').click(loadData);
 
-	let saveData = function(event) {
+	let saveData = function (event) {
 		delayButtonRepeatClick($(this), saveData, event);
 		saveAndRerender();
 	};
 	$('#saveData').click(saveData);
 
-	let reloadData = function(event) {
+	let reloadData = function (event) {
 		delayButtonRepeatClick($(this), reloadData, event);
 		confirmableLoadAndRender();
 	}
 	$('#reloadData').click(reloadData);
 
-	let createNew = function(event) {
+	let createNew = function (event) {
 		delayButtonRepeatClick($(this), createNew, event);
 		createNewRow();
 	};
@@ -112,7 +112,7 @@ function initateControls() {
 
 	let settings = settingsHandler.getSettings();
 	let searchTimerId;
-	$('input.search').keydown(function(event) {
+	$('input.search').keydown(function (event) {
 		if (event.keyCode == 13) {
 			if (settings.filterOnEnter) {
 				ui.filterForSearch();
@@ -121,7 +121,7 @@ function initateControls() {
 		}
 	});
 	if (!settings.filterOnEnter) {
-		$('input.search').on('input', function() {
+		$('input.search').on('input', function () {
 			clearTimeout(searchTimerId);
 			searchTimerId = window.setTimeout(ui.filterForSearch, 300);
 		});
@@ -143,7 +143,7 @@ function isConfirmationNeeded(type) {
 
 }
 
-ipcRenderer.on('window-command', function(event, message) {
+ipcRenderer.on('window-command', function (event, message) {
 	switch (message) {
 		case 'open':
 			choseDirectoryAndLoadData();

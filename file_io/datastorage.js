@@ -1,46 +1,46 @@
 const fileHandler = require('./filehandler.js');
-const app = require('electron').remote.app;
+const app = require('@electron/remote').app;
 
 let directoryPath;
-let phrasesData = (function() {
+let phrasesData = (function () {
 	let meta = [];
 	let fileContent = {};
 	let state = 'idle';
 	let changeListeners = [];
 
-	let addChangeListener = function(listener) {
+	let addChangeListener = function (listener) {
 		changeListeners.push(listener);
 	};
 
-	let getMeta = function() {
+	let getMeta = function () {
 		return meta;
 	};
 
-	let setContent = function(newFileContent, newMeta) {
+	let setContent = function (newFileContent, newMeta) {
 		fileContent = newFileContent;
 		meta = newMeta;
 	};
 
-	let getContent = function() {
+	let getContent = function () {
 		return fileContent;
 	};
 
-	let addContentRow = function() {
+	let addContentRow = function () {
 		return fileContent.push({
 			content: new Array(meta.length + 1),
 			removed: false
 		}) - 1;
 	}
 
-	let setContentRow = function(index, row) {
+	let setContentRow = function (index, row) {
 		fileContent[index].content = row;
 	};
 
-	let toggleRemoveContentRow = function(index) {
+	let toggleRemoveContentRow = function (index) {
 		fileContent[index].removed = !fileContent[index].removed;
 	}
 
-	let setState = function(newState) {
+	let setState = function (newState) {
 		state = newState;
 		for (let i = 0; i < changeListeners.length; i++) {
 			changeListeners[i]();
@@ -48,17 +48,17 @@ let phrasesData = (function() {
 		app.showExitPrompt = isDirty();
 	};
 
-	let isDirty = function() {
+	let isDirty = function () {
 		return state == 'dirty';
 	};
 
-	let isInSync = function() {
+	let isInSync = function () {
 		return meta
 			.filter(element => element.notificationId)
 			.length == 0;
 	}
 
-	let getState = function() {
+	let getState = function () {
 		return state;
 	}
 

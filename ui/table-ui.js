@@ -2,7 +2,7 @@ const dataStorage = require('../file_io/datastorage.js');
 const templateLoader = require('../templates/template-loader.js');
 const Mustache = require('mustache');
 const javaUtil = require('../file_io/java-util.js');
-const clipboard = require('electron').remote.clipboard;
+const clipboard = require('@electron/remote').clipboard;
 const settingsHandler = require('../settings/settings-handler.js');
 
 function renderLoading() {
