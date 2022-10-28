@@ -45,6 +45,11 @@ Note on project settings: Project settings must reside in the same folder as the
 
 ## Release notes
 
+### 2.4.2
+
+-   Fix: It is now possible to select new folders
+-   Updated libraries and upgraded dependencies
+
 ### 2.4.1
 
 -   Fix: Remove the extra indentation in the generated java file
