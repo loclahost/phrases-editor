@@ -16,18 +16,21 @@ function confirmDestructiveAction(type, dialogText) {
 	return new Promise((resolve, reject) => {
 		isConfirmationNeeded(type).then((confirmationNeeded) => {
 			if (confirmationNeeded) {
-				dialog.showMessageBox({
-					type: 'question',
-					buttons: ['Yes', 'No'],
-					title: 'Confirm',
-					message: dialogText
-				}, function (response) {
-					if (response === 0) {
-						resolve();
-					} else {
-						reject();
+				dialog.showMessageBox(
+					{
+						type: 'question',
+						buttons: ['Yes', 'No'],
+						title: 'Confirm',
+						message: dialogText,
+					},
+					function (response) {
+						if (response === 0) {
+							resolve();
+						} else {
+							reject();
+						}
 					}
-				});
+				);
 			} else {
 				resolve();
 			}
@@ -42,28 +45,26 @@ function saveAndRerender() {
 }
 
 function choseDirectoryAndLoadData() {
-	confirmDestructiveLoad()
-		.then(() => {
-			let fileNames = dialog.showOpenDialog({ properties: ['openDirectory'] });
-			if (fileNames && fileNames.length) {
-				loadAndRender(fileNames[0])
-					.then(() => {
-						$('button').prop("disabled", false);
-						settingsHandler.updateSettings({ lastOpenDirectory: fileNames[0] }, 'user');
-					});
+	confirmDestructiveLoad().then(() => {
+		dialog.showOpenDialog({ properties: ['openDirectory'] }).then(({ filePaths }) => {
+			if (filePaths && filePaths.length) {
+				console.log('Loading ' + filePaths);
+				loadAndRender(filePaths[0]).then(() => {
+					$('button').prop('disabled', false);
+					settingsHandler.updateSettings({ lastOpenDirectory: filePaths[0] }, 'user');
+				});
 			}
 		});
+	});
 }
 
 function confirmableLoadAndRender(directory) {
-	confirmDestructiveLoad()
-		.then(() => loadAndRender(directory));
+	confirmDestructiveLoad().then(() => loadAndRender(directory));
 }
 
 function loadAndRender(directory) {
 	ui.renderLoading();
-	return dataStorage.load(directory)
-		.then(() => ui.renderData());
+	return dataStorage.load(directory).then(() => ui.renderData());
 }
 
 function createNewRow() {
@@ -101,7 +102,7 @@ function initateControls() {
 	let reloadData = function (event) {
 		delayButtonRepeatClick($(this), reloadData, event);
 		confirmableLoadAndRender();
-	}
+	};
 	$('#reloadData').click(reloadData);
 
 	let createNew = function (event) {
@@ -126,7 +127,6 @@ function initateControls() {
 			searchTimerId = window.setTimeout(ui.filterForSearch, 300);
 		});
 	}
-
 }
 
 function isConfirmationNeeded(type) {
@@ -136,11 +136,10 @@ function isConfirmationNeeded(type) {
 		if (type == 'load') {
 			loadNeeded &= dataStorage.isDirty();
 		} else {
-			loadNeeded &= !dataStorage.isInSync()
+			loadNeeded &= !dataStorage.isInSync();
 		}
 		resolve(loadNeeded);
 	});
-
 }
 
 ipcRenderer.on('window-command', function (event, message) {
