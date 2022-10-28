@@ -9,7 +9,7 @@ function getUITemplate(templateName) {
 		return uiTemplates[templateName];
 	}
 
-	uiTemplates[templateName] = fs.readFileSync(path.join(__dirname, "ui", templateName + ".mustache"), "utf8");
+	uiTemplates[templateName] = fs.readFileSync(path.join(__dirname, 'ui', templateName + '.mustache'), 'utf8');
 
 	return uiTemplates[templateName];
 }
@@ -19,7 +19,7 @@ function getJavaTemplate(templateName) {
 		return javaTemplates[templateName];
 	}
 
-	javaTemplates[templateName] = fs.readFileSync(path.join(__dirname, "java", templateName + ".mustache"), "utf8");
+	javaTemplates[templateName] = fs.readFileSync(path.join(__dirname, 'java', templateName + '.mustache'), 'utf8');
 
 	return javaTemplates[templateName];
 }

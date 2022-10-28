@@ -8,14 +8,13 @@ const notificationUI = require('../ui/notification-ui.js');
 let fileWatch;
 let notificationId;
 
-var getFilePromise = function(meta, index) {
-	return fs.readFile(meta.path, 'utf8')
-		.then(content => {
-			meta.md5 = createMD5(content);
-			content = content.replace('\r', '');
-			console.log("Read file " + meta.path);
-			return content.split('\n');
-		});
+var getFilePromise = function (meta, index) {
+	return fs.readFile(meta.path, 'utf8').then((content) => {
+		meta.md5 = createMD5(content);
+		content = content.replace('\r', '');
+		console.log('Read file ' + meta.path);
+		return content.split('\n');
+	});
 };
 
 function loadData(directory) {
@@ -23,7 +22,7 @@ function loadData(directory) {
 
 	let phrasesData = {
 		meta: [],
-		fileContent: []
+		fileContent: [],
 	};
 
 	if (!fs.existsSync(directory)) {
@@ -42,7 +41,7 @@ function loadData(directory) {
 	for (let index = 0; index < files.length; index++) {
 		let meta = {
 			name: files[index],
-			path: path.resolve(directory, files[index])
+			path: path.resolve(directory, files[index]),
 		};
 
 		phrasesData.meta.push(meta);
@@ -51,10 +50,10 @@ function loadData(directory) {
 	}
 
 	return Promise.all(promises)
-		.then(values => {
+		.then((values) => {
 			let contentMap = {};
-			values.forEach(function(lines, index) {
-				lines.forEach(function(line) {
+			values.forEach(function (lines, index) {
+				lines.forEach(function (line) {
 					let phraseData = line.split('~');
 					let key = phraseData[0] + '~' + phraseData[1];
 					let data = contentMap[key] || [key];
@@ -66,18 +65,18 @@ function loadData(directory) {
 			for (key in contentMap) {
 				phrasesData.fileContent.push({
 					content: contentMap[key],
-					removed: false
+					removed: false,
 				});
 			}
 
 			return phrasesData;
 		})
-		.catch(err => console.error(err));
+		.catch((err) => console.error(err));
 }
 
 function saveData(phrases, directory, sortType) {
-	return new Promise(resolve => {
-		console.log("Saving data");
+	return new Promise((resolve) => {
+		console.log('Saving data');
 
 		let sortFunction;
 		if (sortType == 'ascii') {
@@ -99,8 +98,7 @@ function saveData(phrases, directory, sortType) {
 		for (let i = 0; i < meta.length; i++) {
 			let newContent = createPhrasesFileContents(fileContent, i + 1);
 			meta[i].md5 = createMD5(newContent);
-			let fileWritePromise = fs.writeFile(meta[i].path, newContent)
-				.then(() => console.log('Done writing ' + meta[i].path));
+			let fileWritePromise = fs.writeFile(meta[i].path, newContent).then(() => console.log('Done writing ' + meta[i].path));
 			promises.push(fileWritePromise);
 		}
 
@@ -130,7 +128,7 @@ function watchDirectory(directory, phrasesData) {
 		fileWatch.close();
 	}
 
-	fileWatch = watch(directory, { recursive: true }, function(event, filename) {
+	fileWatch = watch(directory, { recursive: true }, function (event, filename) {
 		if (filename.endsWith('.phrases') && path.dirname(filename) == directory) {
 			let changedMeta;
 			for (let i = 0; i < phrasesData.meta.length; i++) {
@@ -142,7 +140,7 @@ function watchDirectory(directory, phrasesData) {
 			let originalMD5 = changedMeta.md5;
 			if (originalMD5) {
 				fs.readFile(filename, 'utf8')
-					.then(data => {
+					.then((data) => {
 						if (changedMeta.notificationId) {
 							notificationUI.removeNotification(changedMeta.notificationId);
 							delete changedMeta.notificationId;
@@ -152,14 +150,14 @@ function watchDirectory(directory, phrasesData) {
 							changedMeta.notificationId = notificationUI.createNotification("The file '" + filename + "' has changed on disk", 'warning');
 						}
 					})
-					.catch(err => console.error(err));
+					.catch((err) => console.error(err));
 			}
 		}
 	});
 }
 
 function createMD5(fileContent) {
-	return crypto.createHash('md5').update(fileContent).digest("hex");
+	return crypto.createHash('md5').update(fileContent).digest('hex');
 }
 
 module.exports.loadData = loadData;

@@ -26,11 +26,13 @@ let phrasesData = (function () {
 	};
 
 	let addContentRow = function () {
-		return fileContent.push({
-			content: new Array(meta.length + 1),
-			removed: false
-		}) - 1;
-	}
+		return (
+			fileContent.push({
+				content: new Array(meta.length + 1),
+				removed: false,
+			}) - 1
+		);
+	};
 
 	let setContentRow = function (index, row) {
 		fileContent[index].content = row;
@@ -38,7 +40,7 @@ let phrasesData = (function () {
 
 	let toggleRemoveContentRow = function (index) {
 		fileContent[index].removed = !fileContent[index].removed;
-	}
+	};
 
 	let setState = function (newState) {
 		state = newState;
@@ -53,14 +55,12 @@ let phrasesData = (function () {
 	};
 
 	let isInSync = function () {
-		return meta
-			.filter(element => element.notificationId)
-			.length == 0;
-	}
+		return meta.filter((element) => element.notificationId).length == 0;
+	};
 
 	let getState = function () {
 		return state;
-	}
+	};
 
 	return {
 		addChangeListener: addChangeListener,
@@ -73,10 +73,9 @@ let phrasesData = (function () {
 		setState: setState,
 		isDirty: isDirty,
 		isInSync: isInSync,
-		getState: getState
+		getState: getState,
 	};
-}());
-
+})();
 
 function getDirectoryPath() {
 	return directoryPath;
@@ -89,11 +88,10 @@ function getPhrasesData() {
 function save() {
 	let settings = settingsHandler.getSettings();
 	phrasesData.setState('save');
-	return fileHandler.saveData(phrasesData, directoryPath, settings.sortType)
-		.then(savedPhrases => {
-			phrasesData.setContent(savedPhrases, phrasesData.getMeta());
-			phrasesData.setState('idle');
-		});
+	return fileHandler.saveData(phrasesData, directoryPath, settings.sortType).then((savedPhrases) => {
+		phrasesData.setContent(savedPhrases, phrasesData.getMeta());
+		phrasesData.setState('idle');
+	});
 }
 
 function load(directory) {
@@ -101,15 +99,14 @@ function load(directory) {
 		directoryPath = directory;
 	}
 	phrasesData.setState('load');
-	return fileHandler.loadData(directoryPath)
-		.then(newContent => {
-			phrasesData.setContent(newContent.fileContent, newContent.meta);
-			phrasesData.setState('idle');
-		});
+	return fileHandler.loadData(directoryPath).then((newContent) => {
+		phrasesData.setContent(newContent.fileContent, newContent.meta);
+		phrasesData.setState('idle');
+	});
 }
 
 function getMetaIndexForLocale(locale) {
-	return phrasesData.getMeta().findIndex(element => element.name == locale);
+	return phrasesData.getMeta().findIndex((element) => element.name == locale);
 }
 
 module.exports.getDirectoryPath = getDirectoryPath;

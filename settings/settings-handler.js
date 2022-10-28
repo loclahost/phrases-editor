@@ -7,9 +7,7 @@ const shell = require('electron').shell;
 
 const USER_SETTINGS_PATH = path.join(app.getPath('userData'), 'phrases-editor-settings.json');
 
-app.phrasesConfig = {
-
-};
+app.phrasesConfig = {};
 
 function load(path) {
 	console.log('Reading settings from ' + path);
@@ -20,7 +18,7 @@ function loadSettings() {
 	app.phrasesConfig = {
 		userSettings: {},
 		projectSettings: {},
-		settings: {}
+		settings: {},
 	};
 
 	if (fs.existsSync(USER_SETTINGS_PATH)) {
@@ -35,7 +33,6 @@ function loadSettings() {
 
 		app.phrasesConfig.settings = extend({}, app.phrasesConfig.userSettings, app.phrasesConfig.projectSettings);
 	}
-
 }
 
 function updateSettings(newSettings) {
@@ -56,5 +53,5 @@ ipcRenderer.on('window-command', function (event, message) {
 module.exports = {
 	getSettings: () => app.phrasesConfig.settings,
 	updateSettings: updateSettings,
-	reloadSettings: loadSettings
+	reloadSettings: loadSettings,
 };

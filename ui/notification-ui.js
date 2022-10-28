@@ -7,7 +7,7 @@ function createNotification(notification, type) {
 	notifications[notificationId] = {
 		timestamp: Date.now(),
 		data: notification,
-		type: type || 'info'
+		type: type || 'info',
 	};
 
 	renderNotifications();

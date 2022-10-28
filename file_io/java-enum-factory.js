@@ -1,4 +1,4 @@
-const javaUtil = require("./java-util.js");
+const javaUtil = require('./java-util.js');
 const path = require('path');
 
 function createJavaContent(phrasesArray, currentPath, settings) {
@@ -21,8 +21,8 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 			}
 			let constantName = javaUtil.createValidEnumName(phraseKey[1]);
 			let enumInstanceDeclaration = createEnumConstant(phraseKey[1]);
-			if(duplicatesMap[constantName]) {
-				console.log('Ignoring ' + enumInstanceDeclaration + "; it is a duplicate");
+			if (duplicatesMap[constantName]) {
+				console.log('Ignoring ' + enumInstanceDeclaration + '; it is a duplicate');
 			} else {
 				currentKeys.push(createEnumConstant(phraseKey[1]));
 				duplicatesMap[constantName] = true;
@@ -32,12 +32,12 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 			content += '\t\t' + currentKeys.join(',\n\t\t') + ';\n\n';
 			content += createEnumEnd(currentNamespace);
 		}
-		content += "}\n";
+		content += '}\n';
 		return content;
 	}
 
 	function createEnumStart(rawNamespace) {
-		return "\tpublic enum " + javaUtil.createValidEnumName(rawNamespace) + " implements " + settings.translationInterface + " {\n";
+		return '\tpublic enum ' + javaUtil.createValidEnumName(rawNamespace) + ' implements ' + settings.translationInterface + ' {\n';
 	}
 
 	function createEnumConstant(key) {
@@ -64,13 +64,12 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 		javaEnum += '\t\t\treturn getTranslation(' + settings.localeService + '.getCurrentLocale());\n';
 		javaEnum += '\t\t}\n\n';
 
-		javaEnum += "\t}\n\n";
+		javaEnum += '\t}\n\n';
 
 		return javaEnum;
 	}
 
 	return new Promise((resolve, reject) => resolve(createJavaEnums()));
-
 }
 
 module.exports.createJavaContent = createJavaContent;

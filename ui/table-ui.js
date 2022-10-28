@@ -11,7 +11,9 @@ function renderLoading() {
 
 function renderData() {
 	$('#renderArea').empty().append(createContexts());
-	let content = $('.content').click(function () { transformToForm($(this)) });
+	let content = $('.content').click(function () {
+		transformToForm($(this));
+	});
 
 	let settings = settingsHandler.getSettings();
 	if (settings.highlightMatchedPhrase) {
@@ -51,15 +53,19 @@ function createContexts() {
 
 	let headerContext = createHeaderContexts(phrases);
 
-	return Mustache.render(templateLoader.getUITemplate('phrases-table'), {
-		header: {
-			heading: headerContext
+	return Mustache.render(
+		templateLoader.getUITemplate('phrases-table'),
+		{
+			header: {
+				heading: headerContext,
+			},
+			content: phrasesContexts,
 		},
-		content: phrasesContexts
-	}, {
-		'phrase-row': templateLoader.getUITemplate('phrase-row'),
-		'view-content': templateLoader.getUITemplate('row-view-content')
-	});
+		{
+			'phrase-row': templateLoader.getUITemplate('phrase-row'),
+			'view-content': templateLoader.getUITemplate('row-view-content'),
+		}
+	);
 }
 
 function createHeaderContexts(phrases) {
@@ -80,14 +86,14 @@ function createRowContext(phrases, index) {
 			data: data[i],
 			columnPercent: columnPercent,
 			index: i,
-			key: data[0]
+			key: data[0],
 		};
 	}
 
 	return {
 		index: index,
 		column: columns,
-		removed: phrases[index].removed
+		removed: phrases[index].removed,
 	};
 }
 
@@ -98,7 +104,7 @@ function transformToForm(clickedTr) {
 
 	clickedTr.addClass('is-form');
 
-	let index = clickedTr.data("index");
+	let index = clickedTr.data('index');
 	let phrases = dataStorage.getPhrasesData();
 	let meta = phrases.getMeta();
 	let phrasesArray = phrases.getContent();
@@ -108,15 +114,17 @@ function transformToForm(clickedTr) {
 		formContext.push({
 			locale: meta[i].name,
 			'meta-index': i,
-			value: phrasesArray[index].content[i + 1]
+			value: phrasesArray[index].content[i + 1],
 		});
 	}
 
-	clickedTr.html(Mustache.render(templateLoader.getUITemplate('row-edit-content'), {
-		phrases: formContext,
-		enumKey: javaUtil.createJavaKey(phrasesArray[index].content[0]),
-		removed: phrasesArray[index].removed
-	}));
+	clickedTr.html(
+		Mustache.render(templateLoader.getUITemplate('row-edit-content'), {
+			phrases: formContext,
+			enumKey: javaUtil.createJavaKey(phrasesArray[index].content[0]),
+			removed: phrasesArray[index].removed,
+		})
+	);
 
 	let settings = settingsHandler.getSettings();
 	let keyGeneratorSettings = settings.keyGenerator;
@@ -129,33 +137,31 @@ function transformToForm(clickedTr) {
 				.focus()
 				.on('input', function () {
 					let input = $(this);
-					$('input', clickedTr).first().val(keyGeneratorSettings.namespace + "~" + input.val());
+					$('input', clickedTr)
+						.first()
+						.val(keyGeneratorSettings.namespace + '~' + input.val());
 				});
 		}
 	}
 
 	let phrasesDuplicateSettings = settings.phrasesDuplication;
 	if (phrasesDuplicateSettings) {
-		phrasesDuplicateSettings.forEach(element => {
+		phrasesDuplicateSettings.forEach((element) => {
 			let metaIndexSource = dataStorage.getMetaIndexForLocale(element.sourceLocale);
 			if (metaIndexSource >= 0) {
-				$('input.locale-index-' + metaIndexSource, clickedTr)
-					.on('input', function () {
-						let inputValue = $(this).val();
-						element.targetLocales.forEach(targetLocale => {
-							let metaIndexTarget = dataStorage.getMetaIndexForLocale(targetLocale);
-							$('input.locale-index-' + metaIndexTarget, clickedTr).val(inputValue);
-						});
-
+				$('input.locale-index-' + metaIndexSource, clickedTr).on('input', function () {
+					let inputValue = $(this).val();
+					element.targetLocales.forEach((targetLocale) => {
+						let metaIndexTarget = dataStorage.getMetaIndexForLocale(targetLocale);
+						$('input.locale-index-' + metaIndexTarget, clickedTr).val(inputValue);
 					});
+				});
 			}
 		});
-		[].concat(...phrasesDuplicateSettings
-			.map(element => element.targetLocales))
-			.forEach(targetLocale => {
-				let metaIndexTarget = dataStorage.getMetaIndexForLocale(targetLocale);
-				$('input.locale-index-' + metaIndexTarget, clickedTr).prop("disabled", true);
-			});
+		[].concat(...phrasesDuplicateSettings.map((element) => element.targetLocales)).forEach((targetLocale) => {
+			let metaIndexTarget = dataStorage.getMetaIndexForLocale(targetLocale);
+			$('input.locale-index-' + metaIndexTarget, clickedTr).prop('disabled', true);
+		});
 	}
 
 	$('.cancel-button', clickedTr).click(function (event) {
@@ -193,7 +199,7 @@ function transformToForm(clickedTr) {
 		$('input', clickedTr).each(function (notUsed, element) {
 			let inputElement = $(element);
 			let metaIndex = inputElement.data('meta');
-			inputElement.val(clipboardArray[metaIndex + 1])
+			inputElement.val(clipboardArray[metaIndex + 1]);
 		});
 	});
 
@@ -205,14 +211,13 @@ function transformToForm(clickedTr) {
 		transformToView(clickedTr);
 	});
 
-	if ((clickedTr.offset().top + clickedTr.height()) > ($(window).scrollTop() + $(window).height())) {
+	if (clickedTr.offset().top + clickedTr.height() > $(window).scrollTop() + $(window).height()) {
 		$('html,body').animate({ scrollTop: clickedTr.offset().top });
 	}
-
 }
 
 function transformToView(clickedTr) {
-	let index = clickedTr.data("index");
+	let index = clickedTr.data('index');
 	let phrases = dataStorage.getPhrasesData();
 	let phrasesArray = phrases.getContent();
 
@@ -230,9 +235,11 @@ function addRow() {
 	let phrases = dataStorage.getPhrasesData();
 	let newIndex = phrases.addContentRow();
 	let context = createRowContext(phrases.getContent(), newIndex);
-	let newTr = $(Mustache.render(templateLoader.getUITemplate('phrase-row'), context, {
-		'view-content': templateLoader.getUITemplate('row-view-content')
-	}));
+	let newTr = $(
+		Mustache.render(templateLoader.getUITemplate('phrase-row'), context, {
+			'view-content': templateLoader.getUITemplate('row-view-content'),
+		})
+	);
 	newTr.appendTo($('#renderArea table'));
 	newTr.click(function () {
 		transformToForm($(this));
@@ -254,28 +261,28 @@ function collectText(someFormTr) {
 	$('input', someFormTr).each(function (notUsed, element) {
 		let inputElement = $(element);
 		let metaIndex = inputElement.data('meta');
-		newPhrases[metaIndex + 1] = inputElement.val()
+		newPhrases[metaIndex + 1] = inputElement.val();
 	});
 	if (!/.+~.+/.test(newPhrases[0])) {
-		throw "Invalid key";
+		throw 'Invalid key';
 	}
 	return newPhrases;
 }
 
 function updateTitle() {
-	let openedFile = dataStorage.getDirectoryPath() || "No file opened";
-	let title = "Phrases Editor - " + openedFile;
+	let openedFile = dataStorage.getDirectoryPath() || 'No file opened';
+	let title = 'Phrases Editor - ' + openedFile;
 	switch (dataStorage.getState()) {
 		case 'idle':
 			break;
 		case 'dirty':
-			title += " - Unsaved data";
+			title += ' - Unsaved data';
 			break;
 		case 'save':
-			title += " - Saving data";
+			title += ' - Saving data';
 			break;
 		case 'load':
-			title += " - Loading data";
+			title += ' - Loading data';
 			break;
 	}
 	document.title = title;
@@ -301,7 +308,7 @@ function highlightMatch() {
 }
 
 function dropHighlights() {
-	let removeHighlightRegExp = new RegExp('<span class="matching-text">(.+?)<\/span>', 'ig');
+	let removeHighlightRegExp = new RegExp('<span class="matching-text">(.+?)</span>', 'ig');
 	let context = $(this);
 	$('.column span', context).each(function () {
 		let span = $(this);

@@ -1,4 +1,4 @@
-const javaUtil = require("./java-util.js");
+const javaUtil = require('./java-util.js');
 const path = require('path');
 const templateLoader = require('../templates/template-loader.js');
 const Mustache = require('mustache');
@@ -17,7 +17,7 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 		let context = createWrapperClass(namespaces);
 
 		return Mustache.render(templateLoader.getJavaTemplate('class-wrapper'), context, {
-			'namespace-class': templateLoader.getJavaTemplate('namespace-class')
+			'namespace-class': templateLoader.getJavaTemplate('namespace-class'),
 		});
 	}
 
@@ -27,27 +27,26 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 			localeInterface: settings.localeInterface,
 			localeService: settings.localeService,
 			packageName: javaUtil.guessPackageName(currentPath, settings),
-			namespaceClasses: Object.keys(namespaces).map(key => createNamespaceClass(key, namespaces[key]))
+			namespaceClasses: Object.keys(namespaces).map((key) => createNamespaceClass(key, namespaces[key])),
 		};
 	}
 
 	function createNamespaceClass(namespace, keys) {
 		return {
 			namespace: namespace,
-			initFunctions: createInitFunctions(keys)
+			initFunctions: createInitFunctions(keys),
 		};
 	}
 
 	function createInitFunctions(keys) {
 		let initFunctionMap = {};
 		let duplicatesMap = {};
-		keys
-			.map(key => {
-				return { constantName: javaUtil.createValidEnumName(key), constantKey: key.replace(/"/g, '\\"') };
-			})
-			.filter(constantObject => {
-				if(duplicatesMap[constantObject.constantName]) {
-					console.log('Ignoring ' + constantObject.constantName + "(" + constantObject.constantKey + "); it is a duplicate");
+		keys.map((key) => {
+			return { constantName: javaUtil.createValidEnumName(key), constantKey: key.replace(/"/g, '\\"') };
+		})
+			.filter((constantObject) => {
+				if (duplicatesMap[constantObject.constantName]) {
+					console.log('Ignoring ' + constantObject.constantName + '(' + constantObject.constantKey + '); it is a duplicate');
 					return false;
 				}
 				duplicatesMap[constantObject.constantName] = true;
@@ -55,16 +54,16 @@ function createJavaContent(phrasesArray, currentPath, settings) {
 			})
 			.forEach((value, index) => {
 				let functionIdentifier = value.constantName;
-				if(functionIdentifier.length > 2) {
-					functionIdentifier = functionIdentifier.slice(0,2);
+				if (functionIdentifier.length > 2) {
+					functionIdentifier = functionIdentifier.slice(0, 2);
 				}
-				let functionName = "init" + functionIdentifier;
+				let functionName = 'init' + functionIdentifier;
 				if (!initFunctionMap[functionName]) {
 					initFunctionMap[functionName] = { functionName: functionName, phraseConstants: [] };
 				}
 				initFunctionMap[functionName].phraseConstants.push(value);
 			});
-		return Object.keys(initFunctionMap).map(key => initFunctionMap[key]);
+		return Object.keys(initFunctionMap).map((key) => initFunctionMap[key]);
 	}
 
 	return new Promise((resolve, reject) => resolve(createJavaEnums()));

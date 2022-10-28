@@ -1,15 +1,15 @@
 const path = require('path');
 
 function createValidEnumName(name) {
-	return name.replace(/^\d|\W+/gm, "_").toUpperCase();
+	return name.replace(/^\d|\W+/gm, '_').toUpperCase();
 }
 
 function createJavaKey(phraseKey) {
 	if (!phraseKey) {
-		return "";
+		return '';
 	}
 	let keyParts = phraseKey.split('~');
-	return createValidEnumName(keyParts[0]) + "." + createValidEnumName(keyParts[1]);
+	return createValidEnumName(keyParts[0]) + '.' + createValidEnumName(keyParts[1]);
 }
 
 function guessPackageName(currentPath, settings) {
