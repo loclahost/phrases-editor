@@ -17,7 +17,7 @@
 		"fs-extra": "^10.1.0",
 		"mustache": "^4.2.0",
 		"node-watch": "^0.7.3",
-		"uuid": "^9.0.0"
+		"uuid": "^14.0.0"
 	},
 	"devDependencies": {
 		"electron": "^38.0.0"
