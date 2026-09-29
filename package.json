@@ -20,6 +20,6 @@
 		"uuid": "^14.0.0"
 	},
 	"devDependencies": {
-		"electron": "^43.3.0"
+		"electron": "^43.7.5"
 	}
 }
